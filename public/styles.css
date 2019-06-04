@@ -1,0 +1,257 @@
+/********************************
+  1. Custom variables  
+*********************************/
+/* Colors */
+/* Fonts */
+/* Style */
+/********************************
+  2. Base 
+*********************************/
+*,
+*::before,
+*::after {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  margin: 0;
+}
+
+*:focus {
+  outline: none;
+}
+
+html {
+  font-size: 16px;
+  margin-bottom: 0;
+}
+
+body {
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 1em;
+  line-height: 1.1;
+  color: #171717;
+  background-color: #171717;
+}
+
+main {
+  background-color: #f0f0f0;
+  margin-bottom: 57px;
+}
+
+ul {
+  padding: 0;
+  list-style-type: none;
+}
+
+input {
+  background-color: #3F3F3F;
+  color: #fff;
+  font-size: 1.125rem;
+  border: 0;
+  border-radius: 500px;
+  padding: 0.5em 1.5em;
+  width: 100%;
+}
+
+input::-webkit-input-placeholder {
+  color: #bebebe;
+  font-size: 1rem;
+}
+
+input:-ms-input-placeholder {
+  color: #bebebe;
+  font-size: 1rem;
+}
+
+input::-ms-input-placeholder {
+  color: #bebebe;
+  font-size: 1rem;
+}
+
+input::placeholder {
+  color: #bebebe;
+  font-size: 1rem;
+}
+
+img {
+  max-width: 100%;
+}
+
+/********************************
+  3. Typography   
+*********************************/
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Nunito Sans", sans-serif;
+  margin-bottom: 0.5em;
+  line-height: 1.3em;
+  color: #fff;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+p {
+  color: #171717;
+}
+
+a {
+  color: #bebebe;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+small {
+  font-size: 80%;
+  color: #bebebe;
+}
+
+/********************************
+  4. Layout
+*********************************/
+.header {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#330037), color-stop(36%, #171717));
+  background-image: linear-gradient(to bottom, #330037, #171717 36%);
+  padding: 3em 0 1em 0;
+  color: #fff;
+}
+
+.header__title {
+  display: block;
+  margin-bottom: 1em;
+  padding: 0 1em;
+}
+
+.navigation {
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 57px;
+  background-color: #282828;
+}
+
+.navigation nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.navigation__tab {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  height: 100%;
+  line-height: 68px;
+}
+
+/********************************
+  5. Content
+*********************************/
+.following {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0 1em;
+  overflow-y: hidden;
+  overflow-x: auto;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.following::-webkit-scrollbar {
+  display: none;
+}
+
+.following__link {
+  margin-right: 0.5em;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 auto;
+          flex: 0 0 auto;
+}
+
+.following__link:hover {
+  text-decoration: none;
+}
+
+.following__image {
+  height: 98px;
+}
+
+.feed__item {
+  margin-bottom: 0.5em;
+}
+
+.feed__item:last-of-type {
+  margin-bottom: 0;
+}
+
+.feed__description {
+  overflow: auto;
+  padding: 0.8em;
+  background-color: #fff;
+}
+
+.feed__avatar {
+  border-radius: 50%;
+  height: 37px;
+  width: 37px;
+  float: left;
+  margin-right: 1em;
+}
+
+.feed__name {
+  display: block;
+}
+
+.feed__wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.feed__video {
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 25px;
+  height: 0;
+}
+
+.feed__video iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/********************************
+  6. Template specifick
+*********************************/
+.template__search {
+  padding: 1em;
+}
+
+/********************************
+  7. Override
+*********************************/
+.instagram-media {
+  background-color: #fff !important;
+  border-radius: 0 !important;
+  border: 0 !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.twitter-tweet {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+/*# sourceMappingURL=styles.css.map */
