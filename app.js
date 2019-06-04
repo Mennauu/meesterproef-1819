@@ -1,22 +1,22 @@
-const shrinkRay = require('shrink-ray-current')
+// const shrinkRay   = require('shrink-ray-current')
 const express = require('express')
 const hbs = require('express-handlebars')
 const querystring = require('querystring')
 const request = require('request')
+const spotifyAuthMiddleware = require('./middleware/passport')
+const passport = require('passport')
 const app = express()
 const port = process.env.PORT || 3000
 
 require('dotenv').config()
 
-const client_id = process.env.SPOTIFY_CLIENT_ID
-const client_secret = process.env.SPOTIFY_CLIENT_SECRET
 const redirect_uri = process.env.REDIRECT_URI
 
 // Disable x-powered-by header
 app.disable('x-powered-by')
 
 // Brotli file compression
-app.use(shrinkRay())
+// app.use(shrinkRay())
 
 // serve static files
 app.use(express.static(__dirname + '/public', {
@@ -35,15 +35,57 @@ app.engine('hbs', hbs({
 
 // Homepage
 app.get('/', async (req, res) => {
-  try {
-    await res.render('home', {
-      layout: 'default',
-      template: 'template__home',
-    })
+  await res.render('home', {
+    layout: 'default',
+    template: 'template__home',
+    user: req.user
+  })
+})
 
-  } catch (err) {
-    throw err
-  }
+app.get('/spotify/login', passport.authenticate('spotify', {
+  scope: ['user-read-email', 'user-read-private']
+}), (req, res) => {
+  // res.redirect('https://accounts.spotify.com/authorize?' +
+  //   querystring.stringify({
+  //     response_type: 'code',
+  //     client_id: client_id,
+  //     scope: 'user-read-private user-read-email',
+  //     redirect_uri: redirect_uri + 'spotify/callback'
+  //   }))
+})
+
+app.get('/spotify/callback', passport.authenticate('spotify', { failureRedirect: '/login' }), (req, res) => {
+  // const code = req.query.code || null
+
+  // const authOptions = {
+  //   url: 'https://accounts.spotify.com/api/token',
+  //   form: {
+  //     code: code,
+  //     redirect_uri: redirect_uri + 'spotify/callback',
+  //     grant_type: 'authorization_code'
+  //   },
+  //   headers: {
+  //     'Authorization': 'Basic ' + (new Buffer.from(
+  //       client_id + ':' + client_secret
+  //     ).toString('base64'))
+  //   },
+  //   json: true
+  // }
+
+  res.redirect('/')
+
+  // request.post(authOptions, (error, response, body) => {
+  //   if (!error && response.statusCode === 200) {
+  //     let access_token = body.access_token
+
+  //     // req.session.acces_token = access_token
+  //     res.redirect(redirect_uri)
+  //   }
+  // })
+})
+
+app.get('*', (req, res) => {
+  res.redirect(redirect_uri)
 })
 
 // Search
@@ -58,43 +100,16 @@ app.get('/search', async (req, res) => {
   }
 })
 
-// ***** SPOTIFY AUTHENTICATION  ***** //
-
-app.get('/spotify/login', (req, res) => {
-  res.redirect('https://accounts.spotify.com/authorize?' +
-    querystring.stringify({
-      response_type: 'code',
-      client_id: client_id,
-      scope: 'user-read-private user-read-email',
-      redirect_uri
-    }))
-})
-
-app.get('/spotify/callback', (req, res) => {
-  const code = req.query.code || null
-
-  const authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
-    form: {
-      code: code,
-      redirect_uri,
-      grant_type: 'authorization_code'
-    },
-    headers: {
-      'Authorization': 'Basic ' + (new Buffer.from(
-        client_id + ':' + client_secret
-      ).toString('base64'))
-    },
-    json: true
+//  Simple route middleware to ensure user is authenticated.
+//   Use this route middleware on any resource that needs to be protected.  If
+//   the request is authenticated (typically via a persistent login session),
+//   the request will proceed. Otherwise, the user will be redirected to the
+//   login page.
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
   }
-
-  request.post(authOptions, (error, response, body) => {
-    const access_token = body.access_token
-    const uri = redirect_uri
-
-    req.session.acces_token = access_token
-    res.redirect(uri)
-  })
-})
+  res.redirect('/login')
+}
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
