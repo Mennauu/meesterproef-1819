@@ -17,6 +17,7 @@
     "passport-spotify": "^1.0.1",
     "querystring": "^0.2.0",
     "request": "^2.88.0",
-    "shrink-ray-current": "^3.0.2"
+    "shrink-ray-current": "^3.0.2",
+    "spotify-web-api-node": "^4.0.0"
   }
 }

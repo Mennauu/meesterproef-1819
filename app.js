@@ -3,6 +3,7 @@ const express = require('express')
 const hbs = require('express-handlebars')
 const querystring = require('querystring')
 const request = require('request')
+const SpotifyWebApi = require('spotify-web-api-node')
 const app = express()
 const port = process.env.PORT || 3000
 
@@ -12,6 +13,9 @@ const redirect_uri = process.env.REDIRECT_URI
 
 // Disable x-powered-by header
 app.disable('x-powered-by')
+
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 
 // Brotli file compression
 // app.use(shrinkRay())
@@ -93,7 +97,7 @@ app.get('/logout', (req, res) => {
   res.redirect('/')
 })
 
-// Search
+// Search page
 app.get('/search', async (req, res) => {
   try {
     await res.render('search', {
@@ -105,16 +109,10 @@ app.get('/search', async (req, res) => {
   }
 })
 
-//   Simple route middleware to ensure user is authenticated.
-//   Use this route middleware on any resource that needs to be protected.  If
-//   the request is authenticated (typically via a persistent login session),
-//   the request will proceed. Otherwise, the user will be redirected to the
-//   login page.
-// function ensureAuthenticated(req, res, next) {
-//   if (req.isAuthenticated()) {
-//     return next()
-//   }
-//   res.redirect('/login')
-// }
+/* Search for artist */
+app.post('/search-artist', (req, res) => {
+  console.log(req.body.artist);
+  res.end()
+})
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

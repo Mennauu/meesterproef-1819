@@ -29,11 +29,12 @@ body {
   font-size: 1em;
   line-height: 1.1;
   color: #171717;
-  background-color: #171717;
+  background: -webkit-gradient(linear, left bottom, left top, from(black), color-stop(90%, #282828));
+  background: linear-gradient(0deg, black 0%, #282828 90%);
+  min-height: 100vh;
 }
 
 main {
-  background-color: #f0f0f0;
   margin-bottom: 57px;
 }
 
@@ -114,9 +115,9 @@ small {
   4. Layout
 *********************************/
 .header {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#330037), color-stop(36%, #171717));
-  background-image: linear-gradient(to bottom, #330037, #171717 36%);
-  padding: 3em 0 1em 0;
+  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(10%, #282828), to(#330037));
+  background-image: linear-gradient(0deg, #282828 10%, #330037 100%);
+  padding: 3em 0 3em 0;
   color: #fff;
 }
 
@@ -129,6 +130,7 @@ small {
 .navigation {
   text-align: center;
   position: fixed;
+  z-index: 2;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -229,13 +231,56 @@ small {
   height: 98px;
 }
 
+.feed {
+  margin-top: -2em;
+  padding: 1em;
+}
+
 .feed__item {
-  margin-bottom: 0.5em;
+  background-color: #fff;
+  margin-bottom: 1.5em;
   position: relative;
+  overflow: hidden;
+  z-index: 1;
+  border-radius: 10px !important;
 }
 
 .feed__item:last-of-type {
   margin-bottom: 0;
+}
+
+.feed__item--facebook {
+  background-color: #fff;
+}
+
+.feed__item--facebook .fb-post {
+  margin-top: -1px;
+  margin-left: -1px;
+  width: calc(100% + 1px) !important;
+}
+
+.feed__item--facebook .fb_iframe_widget_fluid span {
+  width: 100% !important;
+}
+
+.feed__item--facebook iframe {
+  width: auto !important;
+}
+
+.feed__item--youtube {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  border-radius: 10px;
+  background-color: transparent;
+}
+
+.feed__item--youtube iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .feed__description {
@@ -262,21 +307,6 @@ small {
   display: flex;
 }
 
-.feed__video {
-  position: relative;
-  padding-bottom: 56.25%;
-  padding-top: 25px;
-  height: 0;
-}
-
-.feed__video iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
 /********************************
   7. Template specifick
 *********************************/
@@ -289,8 +319,6 @@ small {
 *********************************/
 .instagram-media {
   background-color: #fff !important;
-  border-radius: 0 !important;
-  border: 0 !important;
   width: 100% !important;
   margin: 0 !important;
 }

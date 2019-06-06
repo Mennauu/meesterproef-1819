@@ -1,10 +1,13 @@
-const socket = io()
+const form = document.getElementById("searchArtist")
+let formData = new FormData(form)
+const request = new XMLHttpRequest()
 
-socket.on('query', result => renderSearchResult(result))
+form.addEventListener("submit", submitHandler)
 
-$('#searchSongs').submit((e) => {
+function submitHandler(e) {
   e.preventDefault()
-  socket.emit('searching', $('#numberSearch').val())
-  $('#numberSearch').val('')
-  return false
-})
+
+  request.open('POST', '/search-artist', true)
+  request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+  request.send(formData)
+}
