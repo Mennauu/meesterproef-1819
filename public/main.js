@@ -1,13 +1,37 @@
-const form = document.getElementById("searchArtist")
-let formData = new FormData(form)
-const request = new XMLHttpRequest()
+const searchInput = document.querySelector('.searchArtist')
+const resultContainer = document.querySelector('.artists')
 
-form.addEventListener("submit", submitHandler)
+searchInput.addEventListener("input", async () => {
+  const value = { search: searchInput.value }
 
-function submitHandler(e) {
-  e.preventDefault()
+  try {
+    const config = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(value)
+    }
+    const response = await fetch('/search', config)
+    const data = await response.json()
 
-  request.open('POST', '/search-artist', true)
-  request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
-  request.send(formData)
-}
+    if (response.ok) {
+      while (resultContainer.firstChild) resultContainer.removeChild(resultContainer.firstChild)
+
+      for (let artist of data) {
+        const HTML =
+          `<li class="artist" id="${artist.id}">
+             <a class="artist__link "href="#">
+               <img class="artist__image" src="${artist.image.url}" alt="${artist.name}">
+               <span class="artist__name">${artist.name}</span>
+             </a>
+           </li>`
+        resultContainer.insertAdjacentHTML('afterbegin', HTML)
+      }
+    } else {
+      console.log("Response is false")
+    }
+  } catch (error) {
+    console.log(error)
+  }
+})

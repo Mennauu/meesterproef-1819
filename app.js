@@ -3,19 +3,32 @@ const express = require('express')
 const hbs = require('express-handlebars')
 const querystring = require('querystring')
 const request = require('request')
+const bodyParser = require('body-parser')
 const SpotifyWebApi = require('spotify-web-api-node')
 const app = express()
 const port = process.env.PORT || 3000
 
 require('dotenv').config()
 
-const redirect_uri = process.env.REDIRECT_URI
+const spotifyApi = new SpotifyWebApi({
+  clientId: process.env.SPOTIFY_CLIENT_ID,
+  clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+  redirectUri: process.env.REDIRECT_URI
+})
+
+// Retrieve access token
+spotifyApi.clientCredentialsGrant().then(
+  (data) => { spotifyApi.setAccessToken(data.body['access_token']) },
+  (err) => { console.log('Something went wrong when retrieving an access token', err) }
+)
 
 // Disable x-powered-by header
 app.disable('x-powered-by')
 
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
+// support parsing of application/json type post data
+app.use(bodyParser.json())
+// support parsing of application/x-www-form-urlencoded post data
+app.use(bodyParser.urlencoded({ extended: true }))
 
 // Brotli file compression
 // app.use(shrinkRay())
@@ -61,7 +74,7 @@ app.get('/spotify/login', (req, res) => {
       response_type: 'code',
       client_id: process.env.SPOTIFY_CLIENT_ID,
       scope: 'user-read-private user-read-email',
-      redirect_uri: redirect_uri + 'spotify/callback'
+      redirect_uri: process.env.REDIRECT_URI + 'spotify/callback'
     }))
 })
 
@@ -72,7 +85,7 @@ app.get('/spotify/callback', (req, res) => {
     url: 'https://accounts.spotify.com/api/token',
     form: {
       code: code,
-      redirect_uri: redirect_uri + 'spotify/callback',
+      redirect_uri: process.env.REDIRECT_URI + 'spotify/callback',
       grant_type: 'authorization_code'
     },
     headers: {
@@ -85,9 +98,9 @@ app.get('/spotify/callback', (req, res) => {
 
   request.post(authOptions, (error, response, body) => {
     if (!error && response.statusCode === 200) {
-      let access_token = body.access_token
+      access_token = body.access_token
       // req.session.acces_token = access_token
-      res.redirect(redirect_uri + 'home')
+      res.redirect(process.env.REDIRECT_URI + 'home')
     }
   })
 })
@@ -110,9 +123,37 @@ app.get('/search', async (req, res) => {
 })
 
 /* Search for artist */
-app.post('/search-artist', (req, res) => {
-  console.log(req.body.artist);
-  res.end()
+app.post('/search', (req, res) => {
+  const search = Object.values(req.body).toString()
+
+  spotifyApi.searchArtists(search)
+    .then((data) => {
+      const artists = []
+
+      for (let artist of data.body.artists.items) {
+        artists.push({
+          id: artist.id,
+          name: artist.name,
+          image: artist.images[2]
+        })
+      }
+
+      res.send(artists)
+    }, (err) => {
+      console.error(err)
+    })
+})
+
+// Search page
+app.get('/artist', async (req, res) => {
+  try {
+    await res.render('artist', {
+      layout: 'default',
+      template: 'template__artist',
+    })
+  } catch (err) {
+    throw err
+  }
 })
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

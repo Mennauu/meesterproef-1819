@@ -18,7 +18,6 @@ $purple: #330037;
 $header-gradient: linear-gradient(0deg, rgba(40,40,40,1) 10%, rgba(51,0,55,1) 100%);
 $body-gradient: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(40,40,40,1) 90%);
 
-
 /* Fonts */
 $font-nt-sans: "Nunito Sans", sans-serif;
 
@@ -168,7 +167,7 @@ small {
   outline: 0;
   border: 0;
   padding: 0.8em 2.4em 0.8em 2.4em;
-  border-radius: 5px;
+  border-radius: $border-radius;
   font-size: 1em;
   position: relative;
   cursor: pointer;
@@ -232,7 +231,7 @@ small {
   position: relative;
   overflow: hidden;
   z-index: 1;
-  border-radius: 10px!important;
+  border-radius: $border-radius!important;
 
   &:last-of-type {
     margin-bottom: 0;
@@ -261,7 +260,7 @@ small {
 	position: relative;
 	padding-bottom: 56.25%;
   height: 0;
-  border-radius: 10px;
+  border-radius: $border-radius;
   background-color: transparent;
   
   iframe {
@@ -272,7 +271,6 @@ small {
     height: 100%;
   }
 }
-
 
 .feed__description {
   overflow: auto;
@@ -294,6 +292,45 @@ small {
 
 .feed__wrapper {
   display: flex;
+}
+
+.artists {
+  margin-top: 1em;
+  margin-bottom: 57px;
+}
+
+.artist {
+  padding: 0.5em;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: $border-radius;
+  }
+}
+
+.artist__link {
+  display: flex;
+  align-items: center;
+  color: $white;
+
+  &:hover {
+    text-decoration: none;
+  }
+
+}
+
+.artist__image {
+  width: 64px;
+  height: 64px;
+  border-radius: $rounded;
+}
+
+.artist__name {
+  margin-left: 0.5em;
 }
 
 /********************************
