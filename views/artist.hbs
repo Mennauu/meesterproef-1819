@@ -1,0 +1,46 @@
+{{#artist}}
+<div class="carousel__image--wrapper">
+  <img class="carousel__image" src="{{images.0.url}}" alt="{{name}}">
+  <div class="carousel__gradient"></div>
+</div>
+<div class="swiper-container">
+  <div class="swiper-wrapper">
+    <div class="swiper-slide">
+      <h1 class="carousel__name">{{name}}</h1>
+      <button class="carousel__button">Follow</button>
+    </div>
+    <div class="swiper-slide dark-slide">
+      <strong>Popular tracks</strong>
+      <ul>
+        {{#each songs}}
+        <li>{{this}}</li>
+        {{/each}}
+      </ul>
+    </div>
+    <div class="swiper-slide dark-slide">
+      <h1 class="carousel__name">{{name}}</h1>
+      <button class="carousel__button">Follow</button>
+    </div>
+  </div>
+  <div class="swiper-pagination"></div>
+</div>
+{{/artist}}
+
+{{#section 'script'}}
+<div id="fb-root"></div>
+<script src="/swiper.min.js"></script>
+<script async src="//www.instagram.com/embed.js"></script>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<script async defer crossorigin="anonymous"
+  src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.3&appId=561819877300981&autoLogAppEvents=1"></script>
+<script defer>
+  const mySwiper = new Swiper('.swiper-container', {
+    direction: 'horizontal',
+    loop: true,
+
+    pagination: {
+      el: '.swiper-pagination',
+    }
+  })
+</script>
+{{/section}}

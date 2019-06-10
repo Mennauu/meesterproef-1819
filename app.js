@@ -45,7 +45,14 @@ app.set('view engine', 'hbs')
 app.engine('hbs', hbs({
   extname: 'hbs',
   defaultView: 'default',
-  layoutsDir: __dirname + '/views/layouts/'
+  layoutsDir: __dirname + '/views/layouts/',
+  helpers: {
+    section: function (name, options) {
+      if (!this._sections) this._sections = {}
+      this._sections[name] = options.fn(this)
+      return null
+    }
+  }
 }))
 
 // Login redirect
@@ -115,7 +122,7 @@ app.get('/search', async (req, res) => {
   try {
     await res.render('search', {
       layout: 'default',
-      template: 'template__search',
+      template: 'template__search'
     })
   } catch (err) {
     throw err
@@ -145,12 +152,37 @@ app.post('/search', (req, res) => {
 })
 
 // Search page
-app.get('/artist', async (req, res) => {
+app.get('/artist/:id', async (req, res) => {
   try {
-    await res.render('artist', {
-      layout: 'default',
-      template: 'template__artist',
-    })
+
+    await spotifyApi.getArtist(req.params.id)
+      .then(async function (data) {
+
+        await spotifyApi.getArtistTopTracks(req.params.id, 'NL')
+          .then(async function (list) {
+            const tracks = []
+
+            for (let track of list.body.tracks) {
+              tracks.push({
+                name: track.name
+              })
+            }
+
+            await res.render('artist', {
+              layout: 'default',
+              template: 'template__artist',
+              artist: data.body,
+              songs: tracks
+            })
+
+          }, function (err) {
+            console.log('Something went wrong!', err);
+          });
+
+      }, function (err) {
+        console.error(err)
+      })
+
   } catch (err) {
     throw err
   }
