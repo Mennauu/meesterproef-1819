@@ -15,32 +15,48 @@
       </div>
     </div>
     <div class="swiper-slide dark-slide">
-      <strong>Popular tracks</strong>
-      <ul>
+      <strong class="carousel__title">Popular tracks</strong>
+      <ul class="carousel__track--wrapper">
         {{#songs}}
-        <li>{{this}}</li>
+        <li class="carousel__track">
+          <span class="carousel__track--name"><span>{{number}}.</span> {{track}}</span>
+          <img class="carousel__track--more" src="/images/more-opacity.svg" alt="more">
+        </li>
         {{/songs}}
       </ul>
+      {{#spotifyURL}}
+      <a class="carousel__track--button" href="{{this}}">View all</a>
+      {{/spotifyURL}}
     </div>
+    {{#wiki}}
+    {{#if extract}}
     <div class="swiper-slide dark-slide">
-      {{#wiki}}
+      <strong class="carousel__title">Info</strong>
       <p class="carousel__description">{{extract}}</p>
-      {{/wiki}}
+      <a class="carousel__description--button" href="{{content_urls.mobile.page}}">Full Bio</a>
     </div>
+    {{/if}}
+    {{/wiki}}
   </div>
   <div class="swiper-pagination"></div>
 </div>
 
-<span class="header__title white">People you may also like</span>
+<strong class="header__title">Fans also like</strong>
 <nav class="related">
   {{#related}}
+  {{#if images.2.url}}
   <a href="/artist/{{id}}" class="related__link">
     <img src="{{images.2.url}}" alt="{{name}}" class="related__image">
   </a>
+  {{/if}}
   {{/related}}
 </nav>
 
 <main>
+  <div class="feed__header--wrapper">
+    <strong class="feed__header--title">Most recent</strong>
+    <img class="feed__header--more" src="/images/more.svg" alt="more">
+  </div>
   <div class="feed">
     <div class="feed__item feed__item--instagram">
       <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/BwWS0E0nFyY/"
@@ -152,8 +168,8 @@
 
 {{#section 'script'}}
 <div id="fb-root"></div>
-<script src="/swiper.min.js"></script>
-<script src="/fittext.min.js"></script>
+<script src="/js/swiper.min.js"></script>
+<script src="/js/fitty.min.js"></script>
 <script async src="//www.instagram.com/embed.js"></script>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 <script async defer crossorigin="anonymous"

@@ -69,12 +69,14 @@ app.get('/home', async (req, res) => {
   })
 })
 
+// Login page
 app.get('/login', async (req, res) => {
   await res.render('login', {
     layout: 'authentication',
     template: 'template__login'
   })
 })
+
 
 app.get('/spotify/login', (req, res) => {
   res.redirect('https://accounts.spotify.com/authorize?' +
@@ -107,6 +109,7 @@ app.get('/spotify/callback', (req, res) => {
   request.post(authOptions, (error, response, body) => {
     if (!error && response.statusCode === 200) {
       access_token = body.access_token
+
       // req.session.acces_token = access_token
       res.redirect(process.env.REDIRECT_URI + 'home')
     }
@@ -165,7 +168,11 @@ app.get('/artist/:id', (req, res) => {
 
               for (let track of list.body.tracks) {
                 number++
-                tracks.push(`${number}. ${track.name}`)
+
+                tracks.push({
+                  track: track.name,
+                  number: number
+                })
               }
 
               const wikidata = await (await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${artist.body.name}`)).json()
@@ -176,7 +183,8 @@ app.get('/artist/:id', (req, res) => {
                 artist: artist.body,
                 songs: tracks.slice(0, 5),
                 wiki: wikidata,
-                related: related.body.artists
+                related: related.body.artists,
+                spotifyURL: list.body.tracks[0].external_urls.spotify
               })
 
             }, (err) => {
