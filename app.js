@@ -5,6 +5,7 @@ const querystring = require('querystring')
 const request = require('request')
 const bodyParser = require('body-parser')
 const SpotifyWebApi = require('spotify-web-api-node')
+const fetch = require("node-fetch")
 const app = express()
 const port = process.env.PORT || 3000
 
@@ -152,40 +153,41 @@ app.post('/search', (req, res) => {
 })
 
 // Search page
-app.get('/artist/:id', async (req, res) => {
-  try {
+app.get('/artist/:id', (req, res) => {
+  spotifyApi.getArtist(req.params.id)
+    .then(artist => {
+      spotifyApi.getArtistRelatedArtists(req.params.id)
+        .then(related => {
+          spotifyApi.getArtistTopTracks(req.params.id, 'NL')
+            .then(async (list) => {
+              const tracks = []
+              let number = 0
 
-    await spotifyApi.getArtist(req.params.id)
-      .then(async function (data) {
+              for (let track of list.body.tracks) {
+                number++
+                tracks.push(`${number}. ${track.name}`)
+              }
 
-        await spotifyApi.getArtistTopTracks(req.params.id, 'NL')
-          .then(async function (list) {
-            const tracks = []
+              const wikidata = await (await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${artist.body.name}`)).json()
 
-            for (let track of list.body.tracks) {
-              tracks.push({
-                name: track.name
+              await res.render('artist', {
+                layout: 'default',
+                template: 'template__artist',
+                artist: artist.body,
+                songs: tracks.slice(0, 5),
+                wiki: wikidata,
+                related: related.body.artists
               })
-            }
 
-            await res.render('artist', {
-              layout: 'default',
-              template: 'template__artist',
-              artist: data.body,
-              songs: tracks
+            }, (err) => {
+              console.log('Something went wrong with getArtistsTopTracks!', err);
             })
-
-          }, function (err) {
-            console.log('Something went wrong!', err);
-          });
-
-      }, function (err) {
-        console.error(err)
-      })
-
-  } catch (err) {
-    throw err
-  }
+        }, (err) => {
+          console.log('Something went wrong with getArtistRelatedArtists', err);
+        })
+    }, (err) => {
+      console.error('Something went wrong with getArtist!', err)
+    })
 })
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

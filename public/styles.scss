@@ -192,7 +192,8 @@ small {
 /********************************
   6. Content
 *********************************/
-.following {
+.following,
+.related {
   display: flex;
   padding: 0 1em;
   overflow-y: hidden;
@@ -207,7 +208,8 @@ small {
   }
 }
 
-.following__link {
+.following__link,
+.related__link {
   margin-right: 0.5em;
   flex: 0 0 auto;
 
@@ -218,6 +220,13 @@ small {
 
 .following__image {
   height: 98px;
+}
+
+.related__image {
+  height: 80px;
+  width: 80px;
+  object-fit: cover;
+  border-radius: $rounded;
 }
 
 .feed {
@@ -345,6 +354,12 @@ small {
   padding: 1em;
 }
 
+.template__artist {
+  main {
+    margin-top: 50px;
+  }
+}
+
 /********************************
   8. Override
 *********************************/
@@ -392,8 +407,23 @@ small {
 .swiper-container {
   width: 100%;
   height: 420px;
-  text-align: center;
   color: $white;
+  margin-bottom: 40px;
+}
+
+.swiper-slide--first {
+  text-align: center;
+  display: flex;
+
+  .carousel__name {
+    margin-bottom: 28px;
+  }
+
+  > .align-bottom {
+    margin-bottom: 60px;
+    width: calc(100% - 2em);
+    margin-left: 1em;
+  }
 }
 
 .carousel__image--wrapper {
@@ -407,6 +437,7 @@ small {
   width: 100%;
   max-height: 350px;
   object-fit: cover;
+  object-position: top;
 }
 
 .carousel__gradient {
@@ -424,6 +455,11 @@ small {
   z-index: 1;
   text-transform: uppercase;
   font-size: 3.5em;
+  width: 100%;
+}
+
+.carousel__description {
+  color: $white;
 }
 
 .carousel__button {
@@ -451,6 +487,17 @@ small {
 }
 
 .dark-slide {
-  opacity: 0.87;
-  background-color: $black;
+  background: rgba(23,23,23, 0.87);
+}
+
+/********************************
+  10. Miscellaneous
+*********************************/
+
+.align-bottom {
+  align-self: flex-end;
+}
+
+.white {
+  color: $white;
 }

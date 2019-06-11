@@ -14,6 +14,7 @@
     "express-handlebars": "^3.0.2",
     "force": "0.0.3",
     "html2canvas": "^1.0.0-rc.3",
+    "node-fetch": "^2.6.0",
     "passport": "^0.4.0",
     "passport-spotify": "^1.0.1",
     "querystring": "^0.2.0",

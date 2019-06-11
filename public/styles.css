@@ -198,7 +198,8 @@ small {
 /********************************
   6. Content
 *********************************/
-.following {
+.following,
+.related {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -211,23 +212,34 @@ small {
   scrollbar-width: none;
 }
 
-.following::-webkit-scrollbar {
+.following::-webkit-scrollbar,
+.related::-webkit-scrollbar {
   display: none;
 }
 
-.following__link {
+.following__link,
+.related__link {
   margin-right: 0.5em;
   -webkit-box-flex: 0;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
 }
 
-.following__link:hover {
+.following__link:hover,
+.related__link:hover {
   text-decoration: none;
 }
 
 .following__image {
   height: 98px;
+}
+
+.related__image {
+  height: 80px;
+  width: 80px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 50%;
 }
 
 .feed {
@@ -360,6 +372,10 @@ small {
   padding: 1em;
 }
 
+.template__artist main {
+  margin-top: 50px;
+}
+
 /********************************
   8. Override
 *********************************/
@@ -419,8 +435,25 @@ small {
 .swiper-container {
   width: 100%;
   height: 420px;
-  text-align: center;
   color: #fff;
+  margin-bottom: 40px;
+}
+
+.swiper-slide--first {
+  text-align: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.swiper-slide--first .carousel__name {
+  margin-bottom: 28px;
+}
+
+.swiper-slide--first > .align-bottom {
+  margin-bottom: 60px;
+  width: calc(100% - 2em);
+  margin-left: 1em;
 }
 
 .carousel__image--wrapper {
@@ -435,6 +468,8 @@ small {
   max-height: 350px;
   -o-object-fit: cover;
      object-fit: cover;
+  -o-object-position: top;
+     object-position: top;
 }
 
 .carousel__gradient {
@@ -453,6 +488,11 @@ small {
   z-index: 1;
   text-transform: uppercase;
   font-size: 3.5em;
+  width: 100%;
+}
+
+.carousel__description {
+  color: #fff;
 }
 
 .carousel__button {
@@ -480,7 +520,18 @@ small {
 }
 
 .dark-slide {
-  opacity: 0.87;
-  background-color: #171717;
+  background: rgba(23, 23, 23, 0.87);
+}
+
+/********************************
+  10. Miscellaneous
+*********************************/
+.align-bottom {
+  -ms-flex-item-align: end;
+      align-self: flex-end;
+}
+
+.white {
+  color: #fff;
 }
 /*# sourceMappingURL=styles.css.map */
