@@ -6,7 +6,9 @@ const request = require('request')
 const bodyParser = require('body-parser')
 const SpotifyWebApi = require('spotify-web-api-node')
 const fetch = require("node-fetch")
+const mongoose = require('mongoose')
 const app = express()
+const db = mongoose.connection
 const port = process.env.PORT || 3000
 
 require('dotenv').config()
@@ -17,15 +19,16 @@ const spotifyApi = new SpotifyWebApi({
   redirectUri: process.env.REDIRECT_URI
 })
 
-// Retrieve access token
-spotifyApi.clientCredentialsGrant().then(
-  (data) => { spotifyApi.setAccessToken(data.body['access_token']) },
-  (err) => { console.log('Something went wrong when retrieving an access token', err) }
-)
+// Setup the mongoose database
+mongoose.connect('mongodb://localhost/test', { useNewUrlParser: true })
+
+db.on('error', console.error.bind(console, 'connection error:'))
+db.once('open', () => {
+  console.log('Mongoose: we are connected')
+})
 
 // Disable x-powered-by header
 app.disable('x-powered-by')
-
 // support parsing of application/json type post data
 app.use(bodyParser.json())
 // support parsing of application/x-www-form-urlencoded post data
@@ -56,17 +59,34 @@ app.engine('hbs', hbs({
   }
 }))
 
-// Login redirect
-app.get('/', async (req, res) => {
-  res.redirect('/login')
-})
+// Retrieve access token
+spotifyApi.clientCredentialsGrant().then(
+  (data) => { spotifyApi.setAccessToken(data.body['access_token']) },
+  (err) => { console.log('Something went wrong when retrieving an access token', err) }
+)
 
-// Homepage
-app.get('/home', async (req, res) => {
-  await res.render('home', {
-    layout: 'default',
-    template: 'template__home'
-  })
+// var userSchema = new mongoose.Schema({
+//   name: String
+// })
+// var User = mongoose.model('User', userSchema)
+// var userName = new User({
+//   name: body.access_token
+// })
+
+// userName.save((err, userName) => {
+//   if (err) console.log(err)
+// })
+
+// User.find(function (err, kittens) {
+//   if (err) return console.error(err);
+//   console.log(kittens);
+// })
+
+
+
+// Login redirect
+app.get('/', (req, res) => {
+  res.redirect('/login')
 })
 
 // Login page
@@ -76,7 +96,6 @@ app.get('/login', async (req, res) => {
     template: 'template__login'
   })
 })
-
 
 app.get('/spotify/login', (req, res) => {
   res.redirect('https://accounts.spotify.com/authorize?' +
@@ -110,15 +129,21 @@ app.get('/spotify/callback', (req, res) => {
     if (!error && response.statusCode === 200) {
       access_token = body.access_token
 
-      // req.session.acces_token = access_token
       res.redirect(process.env.REDIRECT_URI + 'home')
     }
   })
 })
 
-app.get('/logout', (req, res) => {
-  req.logout()
-  res.redirect('/')
+// Homepage
+app.get('/home', async (req, res) => {
+  try {
+    await res.render('home', {
+      layout: 'default',
+      template: 'template__home'
+    })
+  } catch (err) {
+    throw err
+  }
 })
 
 // Search page
@@ -188,14 +213,19 @@ app.get('/artist/:id', (req, res) => {
               })
 
             }, (err) => {
-              console.log('Something went wrong with getArtistsTopTracks!', err);
+              console.log('Something went wrong with getArtistsTopTracks!', err)
             })
         }, (err) => {
-          console.log('Something went wrong with getArtistRelatedArtists', err);
+          console.log('Something went wrong with getArtistRelatedArtists', err)
         })
     }, (err) => {
       console.error('Something went wrong with getArtist!', err)
     })
+})
+
+app.get('/logout', (req, res) => {
+  req.logout()
+  res.redirect('/')
 })
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

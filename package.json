@@ -15,6 +15,7 @@
     "firebase-admin": "^8.0.0",
     "force": "0.0.3",
     "html2canvas": "^1.0.0-rc.3",
+    "mongoose": "^5.5.14",
     "node-fetch": "^2.6.0",
     "passport": "^0.4.0",
     "passport-spotify": "^1.0.1",
