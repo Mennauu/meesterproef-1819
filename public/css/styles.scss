@@ -221,11 +221,8 @@ small {
   }
 }
 
+.related__image,
 .following__image {
-  height: 98px;
-}
-
-.related__image {
   height: 80px;
   width: 80px;
   object-fit: cover;

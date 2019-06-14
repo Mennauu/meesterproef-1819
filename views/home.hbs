@@ -1,42 +1,11 @@
 <header class="header">
   <strong class="header__title">Following</strong>
   <nav class="following">
-    <a href="#" class="following__link">
-      <img src="/images/bruno-mars.png" alt="Bruno Mars" class="following__image">
+    {{#following}}
+    <a href="/artist/{{id}}" class="following__link">
+      <img src="{{image}}" alt="{{name}}" class="following__image">
     </a>
-    <a href="#" class="following__link">
-      <img src="/images/lady-gaga.png" alt="Lady Gaga" class="following__image">
-    </a>
-    <a href="#" class="following__link">
-      <img src="/images/travis-scott.png" alt="Travis Scott" class="following__image">
-    </a>
-    <a href="#" class="following__link">
-      <img src="/images/bruno-mars.png" alt="Bruno Mars" class="following__image">
-    </a>
-    <a href="#" class="following__link">
-      <img src="/images/lady-gaga.png" alt="Lady Gaga" class="following__image">
-    </a>
-    <a href="#" class="following__link">
-      <img src="/images/travis-scott.png" alt="Travis Scott" class="following__image">
-    </a>
-    <a href="#" class="following__link">
-      <img src="/images/bruno-mars.png" alt="Bruno Mars" class="following__image">
-    </a>
-    <a href="#" class="following__link">
-      <img src="/images/lady-gaga.png" alt="Lady Gaga" class="following__image">
-    </a>
-    <a href="#" class="following__link">
-      <img src="/images/travis-scott.png" alt="Travis Scott" class="following__image">
-    </a>
-    <a href="#" class="following__link">
-      <img src="/images/bruno-mars.png" alt="Bruno Mars" class="following__image">
-    </a>
-    <a href="#" class="following__link">
-      <img src="/images/lady-gaga.png" alt="Lady Gaga" class="following__image">
-    </a>
-    <a href="#" class="following__link">
-      <img src="/images/travis-scott.png" alt="Travis Scott" class="following__image">
-    </a>
+    {{/following}}
   </nav>
 </header>
 

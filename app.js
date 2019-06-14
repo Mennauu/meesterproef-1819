@@ -1,31 +1,33 @@
 // const shrinkRay   = require('shrink-ray-current')
 const express = require('express')
 const hbs = require('express-handlebars')
-const querystring = require('querystring')
-const request = require('request')
 const bodyParser = require('body-parser')
 const SpotifyWebApi = require('spotify-web-api-node')
 const fetch = require("node-fetch")
-const mongoose = require('mongoose')
+const userModel = require('./server/models/user.js')
+const session = require('express-session')
 const app = express()
-const db = mongoose.connection
 const port = process.env.PORT || 3000
 
+require('./server/database.js')
 require('dotenv').config()
 
 const spotifyApi = new SpotifyWebApi({
   clientId: process.env.SPOTIFY_CLIENT_ID,
-  clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-  redirectUri: process.env.REDIRECT_URI
+  redirectUri: process.env.REDIRECT_URI,
+  clientSecret: process.env.SPOTIFY_CLIENT_SECRET
 })
 
-// Setup the mongoose database
-mongoose.connect('mongodb://localhost/test', { useNewUrlParser: true })
-
-db.on('error', console.error.bind(console, 'connection error:'))
-db.once('open', () => {
-  console.log('Mongoose: we are connected')
-})
+// const refreshToken = () => {
+//   spotifyApi.refreshAccessToken()
+//     .then(data => {
+//       console.log('The access token has been refreshed!')
+//       // Save the access token so that it's used in future calls
+//       spotifyApi.setAccessToken(data.body['access_token'])
+//     }, err => {
+//       console.log('Could not refresh access token', err)
+//     })
+// }
 
 // Disable x-powered-by header
 app.disable('x-powered-by')
@@ -59,31 +61,6 @@ app.engine('hbs', hbs({
   }
 }))
 
-// Retrieve access token
-spotifyApi.clientCredentialsGrant().then(
-  (data) => { spotifyApi.setAccessToken(data.body['access_token']) },
-  (err) => { console.log('Something went wrong when retrieving an access token', err) }
-)
-
-// var userSchema = new mongoose.Schema({
-//   name: String
-// })
-// var User = mongoose.model('User', userSchema)
-// var userName = new User({
-//   name: body.access_token
-// })
-
-// userName.save((err, userName) => {
-//   if (err) console.log(err)
-// })
-
-// User.find(function (err, kittens) {
-//   if (err) return console.error(err);
-//   console.log(kittens);
-// })
-
-
-
 // Login redirect
 app.get('/', (req, res) => {
   res.redirect('/login')
@@ -97,53 +74,140 @@ app.get('/login', async (req, res) => {
   })
 })
 
+// Spotify Login
 app.get('/spotify/login', (req, res) => {
-  res.redirect('https://accounts.spotify.com/authorize?' +
-    querystring.stringify({
-      response_type: 'code',
-      client_id: process.env.SPOTIFY_CLIENT_ID,
-      scope: 'user-read-private user-read-email',
-      redirect_uri: process.env.REDIRECT_URI + 'spotify/callback'
-    }))
+  const scopes = ['user-read-private', 'user-read-email']
+  const authorizeURL = spotifyApi.createAuthorizeURL(scopes)
+
+  res.redirect(authorizeURL)
 })
 
 app.get('/spotify/callback', (req, res) => {
-  const code = req.query.code || null
+  const code = req.query.code
 
-  const authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
-    form: {
-      code: code,
-      redirect_uri: process.env.REDIRECT_URI + 'spotify/callback',
-      grant_type: 'authorization_code'
+  // Retrieve an access token.
+  // spotifyApi.clientCredentialsGrant()
+  //   .then(data => {
+  //     spotifyApi.setAccessToken(data.body['access_token'])
+  //   }, err => {
+  //     console.log('Something went wrong when retrieving an access token', err)
+  //   })
+
+  spotifyApi.authorizationCodeGrant(code)
+    .then(data => {
+      // console.log('The token expires in ' + data.body['expires_in'])
+      // console.log('The access token is ' + data.body['access_token'])
+      // console.log('The refresh token is ' + data.body['refresh_token'])
+
+      // THIS SETS A GLOBAL ACCESS TOKEN, WE NEED ONE PER USER
+      spotifyApi.setAccessToken(data.body['access_token'])
+      // spotifyApi.setRefreshToken(data.body['refresh_token'])
+
+
+      spotifyApi.getMe()
+        .then(data => {
+          const currentUser = data.body.id
+
+          const newUser = new userModel({
+            user: currentUser,
+            accessToken: data.body['access_token']
+          })
+
+          userModel.findOne({ user: currentUser }, (err, user) => {
+            if (user !== null && user.user === currentUser) {
+              console.log('User already exists')
+              res.redirect(process.env.LOCAL_URI + 'home')
+            } else {
+              newUser.save()
+                .then(doc => {
+                  console.log('User has been saved')
+                  res.redirect(process.env.LOCAL_URI + 'home')
+                }).catch(err => {
+                  console.log('There was an error trying to save the user')
+                  console.error(err)
+                })
+            }
+          })
+        }, (err) => {
+          console.log('Something went wrong with getMe!', err)
+        })
     },
-    headers: {
-      'Authorization': 'Basic ' + (new Buffer.from(
-        process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET
-      ).toString('base64'))
-    },
-    json: true
-  }
+      (err) => { console.log('Something went wrong with authorizationCodeGrant!', err) }
+    )
+})
 
-  request.post(authOptions, (error, response, body) => {
-    if (!error && response.statusCode === 200) {
-      access_token = body.access_token
+app.post('/add-artist', (req, res) => {
+  const artist = Object.values(req.body).toString()
 
-      res.redirect(process.env.REDIRECT_URI + 'home')
-    }
-  })
+  spotifyApi.getMe()
+    .then(data => {
+      const currentUser = data.body.id
+
+      userModel.findOne({ user: currentUser }, (err, user) => {
+        if (user.user === currentUser) {
+
+          userModel.findOne({ following: { "$in": [artist] } }, (err, result) => {
+            if (result === null) {
+              userModel.updateOne({
+                $push: { following: artist }
+              }).then(doc => {
+                console.log('RESULT IS TOEGEVOEGD')
+                console.log(doc)
+              }).catch(err => {
+                console.error(err)
+              })
+            } else {
+              console.log('NIET TOEGEVOEGD, STAAT AL IN DE LIJST')
+            }
+          })
+        }
+      })
+    }, (err) => {
+      console.log('Something went wrong with getMe!', err)
+    })
 })
 
 // Homepage
-app.get('/home', async (req, res) => {
-  try {
-    await res.render('home', {
-      layout: 'default',
-      template: 'template__home'
+app.get('/home', (req, res) => {
+  spotifyApi.getMe()
+    .then(data => {
+      const currentUser = data.body.id
+
+      userModel.findOne({ user: currentUser }, (err, user) => {
+        console.log(user)
+        if (user.user === currentUser && user.following.length > 0) {
+
+          spotifyApi.getArtists(user.following)
+            .then(function (data) {
+              let artistData = []
+
+              for (let artist of data.body.artists) {
+                artistData.push({
+                  id: artist.id,
+                  image: artist.images[1].url,
+                  name: artist.name
+                })
+              }
+
+              res.render('home', {
+                layout: 'default',
+                template: 'template__home',
+                following: artistData
+              })
+            }, function (err) {
+              console.error("Het ophalen van meerdere artiesten is mislukt: " + err)
+            })
+
+        } else {
+          res.render('home', {
+            layout: 'default',
+            template: 'template__home'
+          })
+        }
+      })
+    }, function (err) {
+      console.error("Je moet je opnieuw aanmelden via login link: " + err)
     })
-  } catch (err) {
-    throw err
-  }
 })
 
 // Search page

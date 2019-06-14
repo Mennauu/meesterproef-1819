@@ -175,6 +175,9 @@
 <script async defer crossorigin="anonymous"
   src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.3&appId=561819877300981&autoLogAppEvents=1"></script>
 <script defer>
+  const button = document.querySelector('.carousel__button')
+  const image = document.querySelector('.carousel__image').src
+
   const mySwiper = new Swiper('.swiper-container', {
     direction: 'horizontal',
     loop: true,
@@ -186,6 +189,22 @@
 
   fitty(".carousel__name", {
     maxSize: 56
+  })
+
+  button.addEventListener("click", () => {
+    const value = {
+      artist: window.location.href.split("/").pop()
+    }
+
+    const config = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(value)
+    }
+
+    fetch('/add-artist', config)
   })
 </script>
 {{/section}}
