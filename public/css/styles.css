@@ -220,10 +220,20 @@ small {
 
 .following__link,
 .related__link {
-  margin-right: 0.5em;
+  margin-right: 0.7em;
   -webkit-box-flex: 0;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .following__link:hover,
@@ -238,6 +248,12 @@ small {
   -o-object-fit: cover;
      object-fit: cover;
   border-radius: 50%;
+}
+
+.following__name,
+.related__name {
+  color: #fff;
+  margin-top: 0.45em;
 }
 
 .feed__header--wrapper {

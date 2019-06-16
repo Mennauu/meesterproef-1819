@@ -47,6 +47,7 @@
   {{#if images.2.url}}
   <a href="/artist/{{id}}" class="related__link">
     <img src="{{images.2.url}}" alt="{{name}}" class="related__image">
+    <span class="related__name">{{name}}</span>
   </a>
   {{/if}}
   {{/related}}
@@ -160,14 +161,18 @@
     </div>
     {{/if}}
     {{/twitter}}
-    <div class="feed__item feed__item--facebook">
+    {{!-- <div class="feed__item feed__item--facebook">
       <div class="fb-post"
         data-href="https://www.facebook.com/beyonce/photos/a.252225550600/10161884777280601/?type=3&theater"></div>
-    </div>
+    </div> --}}
+    {{#youtube}}
+    {{#if shortcode}}
     <div class="feed__item feed__item--youtube">
-      <iframe width="100%" height="auto" src="https://www.youtube.com/embed/AKcpxwH5f6o" frameborder="0"
+      <iframe width="100%" height="auto" src="https://www.youtube.com/embed/{{shortcode}}" frameborder="0"
         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
+    {{/if}}
+    {{/youtube}}
   </div>
 </main>
 

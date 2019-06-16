@@ -7,7 +7,7 @@ const fetch = require("node-fetch")
 const userModel = require('./server/models/user.js')
 const session = require('express-session')
 const Twitter = require('twitter')
-const FB = require('fb')
+// const FB = require('fb')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -85,6 +85,7 @@ app.get('/spotify/login', (req, res) => {
 
 app.get('/spotify/callback', (req, res) => {
   const code = req.query.code
+
 
   spotifyApi.authorizationCodeGrant(code)
     .then(data => {
@@ -327,9 +328,16 @@ app.get('/artist/:id', (req, res) => {
                 const youtubeData = await (await fetch(`https://www.googleapis.com/youtube/v3/channels?part=contentDetails&forUsername=${youtubeMeta.username}&key=${process.env.YOUTUBE_API_KEY}`)).json()
                 const youtubePlaylistID = youtubeData.items[0].contentDetails.relatedPlaylists.uploads
                 // Retrieve the list of uploaded videos
-                const youtubeUserVideos = await fetch(`https://developers.google.com/apis-explorer/#p/youtube/v3/youtube.playlistItems.list?part=snippet,contentDetails,status&playlistId=${youtubePlaylistID}`)
-                const youtubeLatestUpload = ''
-                console.log(youtubeUserVideos)
+                const youtubeUserVideos = await (await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails,status&playlistId=${youtubePlaylistID}&key=${process.env.YOUTUBE_API_KEY}`)).json()
+                const youtubeLatestUploadShortcode = youtubeUserVideos.items[0].contentDetails.videoId
+                const youtubeLatestUploadDate = youtubeUserVideos.items[0].contentDetails.videoPublishedAt
+                const youtube = {
+                  youtube_url: twitterMeta.youtube,
+                  username: twitterMeta.username,
+                  shortcode: youtubeLatestUploadShortcode,
+                  creation_date: youtubeLatestUploadDate
+                }
+
 
                 res.render('artist', {
                   layout: 'default',
@@ -340,7 +348,8 @@ app.get('/artist/:id', (req, res) => {
                   spotifyURL: list.body.tracks[0].external_urls.spotify,
                   wikipedia,
                   instagram,
-                  twitter
+                  twitter,
+                  youtube
                 })
               } catch (error) {
                 console.error(error);
