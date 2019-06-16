@@ -6,6 +6,9 @@ const SpotifyWebApi = require('spotify-web-api-node')
 const fetch = require("node-fetch")
 const userModel = require('./server/models/user.js')
 const session = require('express-session')
+const Twitter = require('twitter')
+const FB = require('fb')
+
 const app = express()
 const port = process.env.PORT || 3000
 
@@ -18,16 +21,14 @@ const spotifyApi = new SpotifyWebApi({
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET
 })
 
-// const refreshToken = () => {
-//   spotifyApi.refreshAccessToken()
-//     .then(data => {
-//       console.log('The access token has been refreshed!')
-//       // Save the access token so that it's used in future calls
-//       spotifyApi.setAccessToken(data.body['access_token'])
-//     }, err => {
-//       console.log('Could not refresh access token', err)
-//     })
-// }
+const twitterApi = new Twitter({
+  consumer_key: process.env.TWITTER_CONSUMER_KEY,
+  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+  bearer_token: process.env.TWITTER_BEARER_TOKEN
+})
+
+// FB.setAccessToken(process.env.FACEBOOK_BEARER_TOKEN)
+// FB.extend({ appId: process.env.FACEBOOK_CLIENT_ID, appSecret: process.env.FACEBOOK_CLIENT_SECRET })
 
 // Disable x-powered-by header
 app.disable('x-powered-by')
@@ -67,8 +68,8 @@ app.get('/', (req, res) => {
 })
 
 // Login page
-app.get('/login', async (req, res) => {
-  await res.render('login', {
+app.get('/login', (req, res) => {
+  res.render('login', {
     layout: 'authentication',
     template: 'template__login'
   })
@@ -85,32 +86,18 @@ app.get('/spotify/login', (req, res) => {
 app.get('/spotify/callback', (req, res) => {
   const code = req.query.code
 
-  // Retrieve an access token.
-  // spotifyApi.clientCredentialsGrant()
-  //   .then(data => {
-  //     spotifyApi.setAccessToken(data.body['access_token'])
-  //   }, err => {
-  //     console.log('Something went wrong when retrieving an access token', err)
-  //   })
-
   spotifyApi.authorizationCodeGrant(code)
     .then(data => {
-      // console.log('The token expires in ' + data.body['expires_in'])
-      // console.log('The access token is ' + data.body['access_token'])
-      // console.log('The refresh token is ' + data.body['refresh_token'])
-
-      // THIS SETS A GLOBAL ACCESS TOKEN, WE NEED ONE PER USER
+      // THIS SETS A GLOBAL ACCESS TOKEN, WE NEED ONE PER USER (session)
       spotifyApi.setAccessToken(data.body['access_token'])
-      // spotifyApi.setRefreshToken(data.body['refresh_token'])
-
+      spotifyApi.setRefreshToken(data.body['refresh_token'])
 
       spotifyApi.getMe()
         .then(data => {
           const currentUser = data.body.id
 
           const newUser = new userModel({
-            user: currentUser,
-            accessToken: data.body['access_token']
+            user: currentUser
           })
 
           userModel.findOne({ user: currentUser }, (err, user) => {
@@ -137,7 +124,7 @@ app.get('/spotify/callback', (req, res) => {
 })
 
 app.post('/add-artist', (req, res) => {
-  const artist = Object.values(req.body).toString()
+  const artistID = Object.values(req.body).toString()
 
   spotifyApi.getMe()
     .then(data => {
@@ -146,10 +133,10 @@ app.post('/add-artist', (req, res) => {
       userModel.findOne({ user: currentUser }, (err, user) => {
         if (user.user === currentUser) {
 
-          userModel.findOne({ following: { "$in": [artist] } }, (err, result) => {
+          userModel.findOne({ following: { "$in": [artistID] } }, (err, result) => {
             if (result === null) {
               userModel.updateOne({
-                $push: { following: artist }
+                $push: { following: artistID }
               }).then(doc => {
                 console.log('RESULT IS TOEGEVOEGD')
                 console.log(doc)
@@ -174,7 +161,7 @@ app.get('/home', (req, res) => {
       const currentUser = data.body.id
 
       userModel.findOne({ user: currentUser }, (err, user) => {
-        console.log(user)
+        console.log(user.following)
         if (user.user === currentUser && user.following.length > 0) {
 
           spotifyApi.getArtists(user.following)
@@ -211,37 +198,49 @@ app.get('/home', (req, res) => {
 })
 
 // Search page
-app.get('/search', async (req, res) => {
-  try {
-    await res.render('search', {
-      layout: 'default',
-      template: 'template__search'
-    })
-  } catch (err) {
-    throw err
-  }
+app.get('/search', (req, res) => {
+  res.render('search', {
+    layout: 'default',
+    template: 'template__search'
+  })
 })
 
 /* Search for artist */
-app.post('/search', (req, res) => {
-  const search = Object.values(req.body).toString()
+app.post('/search', async (req, res) => {
+  try {
+    const artists = []
+    const searchInput = Object.values(req.body).toString()
+    const data = await spotifyApi.searchArtists(searchInput)
 
-  spotifyApi.searchArtists(search)
-    .then((data) => {
-      const artists = []
+    for (let artist of data.body.artists.items) {
+      artists.push({
+        id: artist.id,
+        name: artist.name,
+        image: artist.images[2]
+      })
+    }
 
-      for (let artist of data.body.artists.items) {
-        artists.push({
-          id: artist.id,
-          name: artist.name,
-          image: artist.images[2]
-        })
-      }
+    res.send(artists)
+  } catch (error) {
+    console.error(error)
+  }
 
-      res.send(artists)
-    }, (err) => {
-      console.error(err)
-    })
+  // spotifyApi.searchArtists(search)
+  //   .then((data) => {
+  //     const artists = []
+
+  //     for (let artist of data.body.artists.items) {
+  //       artists.push({
+  //         id: artist.id,
+  //         name: artist.name,
+  //         image: artist.images[2]
+  //       })
+  //     }
+
+  //     res.send(artists)
+  //   }, (err) => {
+  //     console.error(err)
+  //   })
 })
 
 // Search page
@@ -252,29 +251,100 @@ app.get('/artist/:id', (req, res) => {
         .then(related => {
           spotifyApi.getArtistTopTracks(req.params.id, 'NL')
             .then(async (list) => {
-              const tracks = []
-              let number = 0
+              try {
+                const tracks = []
+                let number = 0
 
-              for (let track of list.body.tracks) {
-                number++
+                for (let track of list.body.tracks) {
+                  number++
 
-                tracks.push({
-                  track: track.name,
-                  number: number
+                  tracks.push({
+                    track: track.name,
+                    number: number
+                  })
+                }
+
+                // Replace bad characters. For example: é = e
+                const normalizedArtistName = artist.body.name.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+
+                /* MusicBrainz API */
+                const musicbrainzArtist = await (await fetch(`http://musicbrainz.org/ws/2/artist/?query=artist:${normalizedArtistName}&fmt=json`)).json()
+                const musicbrainzArtistId = musicbrainzArtist.artists[0].id
+                const musicbrainzArtistLinks = await (await fetch(`http://musicbrainz.org/ws/2/artist/${musicbrainzArtistId}?inc=url-rels&fmt=json`)).json()
+
+                const socialLinks = []
+                for (let link of musicbrainzArtistLinks.relations) {
+                  const url = new URL(link.url.resource)
+                  const domain = url.hostname.split(".").slice(-2).join(".")
+                  const platform = domain.split('.')[0]
+                  const username = url.pathname.substr(1).split('.')[0].replace(/\/$/, '').replace(/^.*\/(.*)$/, "$1")
+
+                  socialLinks.push({
+                    [platform]: link.url.resource,
+                    username
+                  })
+                }
+
+                /* Wikipedia API */
+                const wikipedia = await (await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${normalizedArtistName}`)).json()
+
+                /* Instagram API */
+                const instagramMeta = socialLinks.find(object => object['instagram'])
+                const instagramData = await (await fetch(`${instagramMeta.instagram}?__a=1`)).json()
+                const latestInstagramPostShortcode = instagramData.graphql.user.edge_owner_to_timeline_media.edges[0].node.shortcode
+                const instagram = {
+                  instagram_url: instagramMeta.instagram,
+                  username: instagramMeta.username,
+                  shortcode: latestInstagramPostShortcode
+                }
+
+                /* Twitter API */
+                const twitterMeta = socialLinks.find(object => object['twitter'])
+                const twitterData = await twitterApi.get('/statuses/user_timeline.json', { screen_name: twitterMeta.username, count: 1 })
+                const latestTwitterPostShortcode = twitterData[0].id_str
+                const latestTwitterPostShortcodeDate = twitterData[0].created_at
+                const twitter = {
+                  twitter_url: twitterMeta.twitter,
+                  username: twitterMeta.username,
+                  shortcode: latestTwitterPostShortcode,
+                  creation_date: latestTwitterPostShortcodeDate
+                }
+
+                /* Facebook API */
+                // const facebookMeta = socialLinks.find(object => object['facebook'])
+                // const facebookData = await FB.api(`/${facebookMeta.username}/feed`)
+
+                /* facebookData results in this error message: 
+
+                      "(#10) To use 'Page Public Content Access', your use of this endpoint 
+                      must be reviewed and approved by Facebook. To submit this 'Page Public Content 
+                      Access' feature for review please read our documentation on reviewable 
+                      features: https://developers.facebook.com/docs/apps/review." */
+
+                /* YouTube API */
+                const youtubeMeta = socialLinks.find(object => object['youtube'])
+                // Retrieve the playlist ID for the channel's uploaded videos
+                const youtubeData = await (await fetch(`https://www.googleapis.com/youtube/v3/channels?part=contentDetails&forUsername=${youtubeMeta.username}&key=${process.env.YOUTUBE_API_KEY}`)).json()
+                const youtubePlaylistID = youtubeData.items[0].contentDetails.relatedPlaylists.uploads
+                // Retrieve the list of uploaded videos
+                const youtubeUserVideos = await fetch(`https://developers.google.com/apis-explorer/#p/youtube/v3/youtube.playlistItems.list?part=snippet,contentDetails,status&playlistId=${youtubePlaylistID}`)
+                const youtubeLatestUpload = ''
+                console.log(youtubeUserVideos)
+
+                res.render('artist', {
+                  layout: 'default',
+                  template: 'template__artist',
+                  artist: artist.body,
+                  songs: tracks.slice(0, 5),
+                  related: related.body.artists,
+                  spotifyURL: list.body.tracks[0].external_urls.spotify,
+                  wikipedia,
+                  instagram,
+                  twitter
                 })
+              } catch (error) {
+                console.error(error);
               }
-
-              const wikidata = await (await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${artist.body.name}`)).json()
-
-              await res.render('artist', {
-                layout: 'default',
-                template: 'template__artist',
-                artist: artist.body,
-                songs: tracks.slice(0, 5),
-                wiki: wikidata,
-                related: related.body.artists,
-                spotifyURL: list.body.tracks[0].external_urls.spotify
-              })
 
             }, (err) => {
               console.log('Something went wrong with getArtistsTopTracks!', err)
