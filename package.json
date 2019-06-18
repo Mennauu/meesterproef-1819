@@ -17,6 +17,7 @@
     "fb": "^2.0.0",
     "firebase-admin": "^8.0.0",
     "force": "0.0.3",
+    "genius-api": "^0.4.1",
     "html2canvas": "^1.0.0-rc.3",
     "login-with-twitter": "^1.2.0",
     "mongoose": "^5.5.15",

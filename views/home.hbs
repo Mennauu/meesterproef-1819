@@ -1,20 +1,29 @@
 <header class="header">
   <strong class="header__title">Following</strong>
   <nav class="following">
+    {{#if following.length}}
     {{#following}}
     <a href="/artist/{{id}}" class="following__link">
       <img src="{{image}}" alt="{{name}}" class="following__image">
       <span class="following__name">{{name}}</span>
     </a>
     {{/following}}
+    {{else}}
+    <div class="following__none">
+      <a href="/search" class="following__search">
+        <img src="/images/plus.png" alt="plus" class="following__add">
+      </a>
+      <span class="following__name">Get started</span>
+    </div>
+    {{/if}}
   </nav>
 </header>
 
 <main>
-  <div class="feed__header--wrapper">
+  {{!-- <div class="feed__header--wrapper">
     <strong class="feed__header--title">Most recent</strong>
     <img class="feed__header--more" src="/images/more.svg" alt="more">
-  </div>
+  </div> --}}
   <div class="feed">
     <div class="feed__item feed__item--instagram">
       <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/BwWS0E0nFyY/"

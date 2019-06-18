@@ -27,6 +27,7 @@ html {
 body {
   font-family: "Nunito Sans", sans-serif;
   font-size: 1em;
+  font-weight: 300;
   line-height: 1.1;
   color: #171717;
   background: #171717;
@@ -48,7 +49,7 @@ input {
   font-size: 1.125rem;
   border: 0;
   border-radius: 500px;
-  padding: 0.5em 1.5em;
+  padding: 0.5em 1em;
   width: 100%;
 }
 
@@ -97,7 +98,6 @@ p {
 a {
   color: #bebebe;
   cursor: pointer;
-  font-weight: bold;
   text-decoration: none;
 }
 
@@ -114,17 +114,16 @@ small {
   4. Layout
 *********************************/
 .header {
-  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(10%, #282828), to(#330037));
-  background-image: linear-gradient(0deg, #282828 10%, #330037 100%);
   padding: 3em 0 3em 0;
   color: #fff;
 }
 
 .header__title {
   display: block;
-  margin-bottom: 1em;
+  margin-bottom: 1.5em;
   padding: 0 1em;
   color: #fff;
+  text-align: center;
 }
 
 .navigation {
@@ -234,6 +233,7 @@ small {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  max-width: 86px;
 }
 
 .following__link:hover,
@@ -243,17 +243,58 @@ small {
 
 .related__image,
 .following__image {
-  height: 80px;
-  width: 80px;
+  height: 86px;
+  width: 86px;
   -o-object-fit: cover;
      object-fit: cover;
   border-radius: 50%;
+}
+
+.following__image {
+  border: 2px solid #7f6cff;
+}
+
+.related__image {
+  border: 2px solid transparent;
 }
 
 .following__name,
 .related__name {
   color: #fff;
   margin-top: 0.45em;
+  text-align: center;
+}
+
+.following__none {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  text-align: center;
+  margin: auto;
+}
+
+.following__search {
+  border-radius: 50%;
+  background-color: #3F3F3F;
+  height: 86px;
+  width: 86px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.following__search .following__add {
+  height: 22px;
+  -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center;
 }
 
 .feed__header--wrapper {
@@ -292,6 +333,10 @@ small {
   margin-bottom: 0;
 }
 
+.feed__item h1, .feed__item h2, .feed__item h3, .feed__item h4, .feed__item h5, .feed__item h6 {
+  color: #171717;
+}
+
 .feed__item--facebook {
   background-color: #fff;
 }
@@ -324,6 +369,101 @@ small {
   left: 0;
   width: 100%;
   height: 100%;
+}
+
+.article__logo {
+  max-height: 54px;
+  text-align: center;
+  padding: 8px;
+}
+
+.article__logo--image {
+  max-height: 38px;
+}
+
+.article__title {
+  font-weight: 900;
+  font-size: 1.52rem;
+  margin-bottom: 1em;
+}
+
+.article__description {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  line-height: 1.5;
+}
+
+.article__link {
+  margin-bottom: 0.5em;
+  display: block;
+}
+
+.article__author {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 900;
+}
+
+.article__meta {
+  padding: 1em;
+}
+
+.article__meta small {
+  color: #171717;
+}
+
+.ticketmaster__logo {
+  padding: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.ticketmaster__logo--image {
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+}
+
+.ticketmaster__logo--main {
+  height: 12px;
+  margin-left: auto;
+}
+
+.ticketmaster__name {
+  text-transform: lowercase;
+  margin-left: 0.5em;
+  font-weight: 700;
+}
+
+.ticketmaster__name:first-letter {
+  text-transform: uppercase;
+}
+
+.ticketmaster__image {
+  width: 100%;
+}
+
+.ticketmaster__link {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 50px;
+  padding: 10px;
+  margin-top: -4px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: #009CDE;
+  color: #fff;
+  font-weight: 700;
+}
+
+.ticketmaster__link--arrow {
+  margin-left: auto;
 }
 
 .feed__description {
@@ -395,11 +535,6 @@ small {
 /********************************
   7. Template specifick
 *********************************/
-.template__home {
-  background: -webkit-gradient(linear, left bottom, left top, from(black), color-stop(90%, #282828));
-  background: linear-gradient(0deg, black 0%, #282828 90%);
-}
-
 .template__home main {
   margin-top: -25px;
 }
@@ -408,8 +543,13 @@ small {
   padding: 1em;
 }
 
+.template__search .header__title {
+  margin-top: 1em;
+  margin-bottom: 0.75em;
+}
+
 .template__artist main {
-  margin-top: 20px;
+  margin-top: 15px;
 }
 
 /********************************
@@ -464,6 +604,10 @@ small {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+}
+
+.swiper-container-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet {
+  margin: 0 2px;
 }
 
 /********************************
@@ -538,14 +682,23 @@ small {
   padding: 0.3em 1em;
   text-transform: uppercase;
   margin-top: -10px;
+  cursor: pointer;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
+
+.carousel__button--clicked {
+  background: #7f6cff;
+  border: 1px solid #7f6cff;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
 }
 
 .swiper-pagination-bullet {
-  background-color: #171717;
-  border: 1px solid #fff;
+  background-color: #282828;
   opacity: 1;
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 .swiper-pagination-bullet-active {
@@ -596,14 +749,10 @@ small {
   text-transform: uppercase;
   text-align: center;
   display: block;
-}
-
-.carousel__track--button {
-  color: #1db954;
+  color: #848484;
 }
 
 .carousel__description--button {
-  color: #848484;
   margin-top: 26px;
 }
 

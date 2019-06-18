@@ -20,7 +20,7 @@
         {{#songs}}
         <li class="carousel__track">
           <span class="carousel__track--name"><span>{{number}}.</span> {{track}}</span>
-          <img class="carousel__track--more" src="/images/more-opacity.svg" alt="more">
+          <img class="carousel__track--more" src="/images/dots.png" alt="more">
         </li>
         {{/songs}}
       </ul>
@@ -43,10 +43,18 @@
 
 <strong class="header__title">Fans also like</strong>
 <nav class="related">
-  {{#related}}
-  {{#if images.2.url}}
+  {{#relatedFollowing}}
+  {{#if image}}
   <a href="/artist/{{id}}" class="related__link">
-    <img src="{{images.2.url}}" alt="{{name}}" class="related__image">
+    <img src="{{image}}" alt="{{name}}" class="following__image">
+    <span class="related__name">{{name}}</span>
+  </a>
+  {{/if}}
+  {{/relatedFollowing}}
+  {{#related}}
+  {{#if image}}
+  <a href="/artist/{{id}}" class="related__link">
+    <img src="{{image}}" alt="{{name}}" class="related__image">
     <span class="related__name">{{name}}</span>
   </a>
   {{/if}}
@@ -54,10 +62,10 @@
 </nav>
 
 <main>
-  <div class="feed__header--wrapper">
+  {{!-- <div class="feed__header--wrapper">
     <strong class="feed__header--title">Most recent</strong>
     <img class="feed__header--more" src="/images/more.svg" alt="more">
-  </div>
+  </div> --}}
   <div class="feed">
     {{#instagram}}
     {{#if shortcode}}
@@ -173,6 +181,70 @@
     </div>
     {{/if}}
     {{/youtube}}
+    {{#newYorkTimes}}
+    {{#if newyorktimes_url}}
+    <div class="feed__item feed__item--newyorktimes">
+      <div class="article__logo">
+        <img class="article__logo--image" src="/images/tnyt-logo.png" alt="{{source}}">
+      </div>
+      <img src="https://static01.nyt.com/{{image}}" alt="{{source}}">
+      <div class="article__meta">
+        <p class="article__title">{{title}}</p>
+        <small class="article__author">{{created_by}}</small>
+        <small class="article__date">{{publication_date}}</small>
+        <p class="article__description">{{description}}</p>
+        <a href="{{newyorktimes_url}}" class="article__link" target="_blank">Continue reading</a>
+      </div>
+    </div>
+    {{/if}}
+    {{/newYorkTimes}}
+    {{#ticketmaster}}
+    {{#if ticketmaster_url}}
+    <div class="feed__item feed__item--ticketmaster">
+      <div class="ticketmaster__logo">
+        <img class="ticketmaster__logo--image" src="{{artist_image}}" alt="{{name}}">
+        <span class="ticketmaster__name">{{name}}</span>
+        <img class="ticketmaster__logo--main" src="/images/ticketmaster.png" alt="Ticketmaster Logo">
+      </div>
+      <img class="ticketmaster__image" src="{{image}}" alt="{{name}}">
+      <a class="ticketmaster__link" href="{{ticketmaster_url}}">
+        <span class="ticketmaster__link--title">Buy tickets</span>
+        <img class="ticketmaster__link--arrow" src="/images/arrow-right.png" alt="arrow right">
+      </a>
+    </div>
+    {{/if}}
+    {{/ticketmaster}}
+    {{!-- {{#guardian}}
+    {{#if guardian_url}}
+    <div class="feed__item feed__item--guardian">
+      <div class="article__logo">
+        <img class="article__logo--image" src="/images/guardian_logo.png" alt="The guardian Logo">
+      </div>
+      <div class="article__meta">
+        <p class="article__title">{{title}}</p>
+        <small class="article__date">{{publication_date}}</small>
+        <a href="{{newyorktimes_url}}" class="article__link" target="_blank">Continue reading</a>
+      </div>
+    </div>
+    {{/if}}
+    {{/guardian}} --}}
+    {{#googleNews}}
+    {{#if url}}
+    <div class="feed__item feed__item--googlenews">
+      <div class="article__logo">
+        <img class="article__logo--image" src="{{logo}}" alt="{{source}}">
+      </div>
+      <img src="{{urlToImage}}" alt="{{source}}">
+      <div class="article__meta">
+        <p class="article__title">{{title}}</p>
+        <small class="article__author">{{author}}</small>
+        <small class="article__date">{{publishedAt}}</small>
+        <p class="article__description">{{content}}</p>
+        <a href="{{url}}" class="article__link" target="_blank">Continue reading</a>
+      </div>
+    </div>
+    {{/if}}
+    {{/googleNews}}
   </div>
 </main>
 
@@ -215,6 +287,9 @@
     }
 
     fetch('/add-artist', config)
+
+    button.classList.add('carousel__button--clicked')
+    button.innerText = "Following"
   })
 </script>
 {{/section}}
