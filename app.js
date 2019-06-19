@@ -19,7 +19,7 @@ app.disable('x-powered-by')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session({
-  secret: 'TheGamer27',
+  secret: process.env.SESSION_SECRET,
   resave: true,
   saveUninitialized: false,
   store: new MongoStore({
