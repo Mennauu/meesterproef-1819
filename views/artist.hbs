@@ -176,13 +176,18 @@
     {{#youtube}}
     {{#if shortcode}}
     <div class="feed__item feed__item--youtube">
-      <iframe width="100%" height="auto" src="https://www.youtube.com/embed/{{shortcode}}" frameborder="0"
-        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <div class="article__logo">
+        <img class="article__logo--image" src="/images/youtube-logo.png" alt="Youtube Logo">
+      </div>
+      <div class="feed__ratio--wrapper">
+        <iframe width="100%" height="auto" src="https://www.youtube.com/embed/{{shortcode}}" frameborder="0"
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
     </div>
     {{/if}}
     {{/youtube}}
-    {{#newYorkTimes}}
-    {{#if newyorktimes_url}}
+    {{#thenewyorktimes}}
+    {{#if thenewyorktimes_url}}
     <div class="feed__item feed__item--newyorktimes">
       <div class="article__logo">
         <img class="article__logo--image" src="/images/tnyt-logo.png" alt="{{source}}">
@@ -193,11 +198,11 @@
         <small class="article__author">{{created_by}}</small>
         <small class="article__date">{{publication_date}}</small>
         <p class="article__description">{{description}}</p>
-        <a href="{{newyorktimes_url}}" class="article__link" target="_blank">Continue reading</a>
+        <a href="{{thenewyorktimes_url}}" class="article__link" target="_blank">Continue reading</a>
       </div>
     </div>
     {{/if}}
-    {{/newYorkTimes}}
+    {{/thenewyorktimes}}
     {{#ticketmaster}}
     {{#if ticketmaster_url}}
     <div class="feed__item feed__item--ticketmaster">
@@ -228,7 +233,7 @@
     </div>
     {{/if}}
     {{/guardian}} --}}
-    {{#googleNews}}
+    {{#googlenews}}
     {{#if url}}
     <div class="feed__item feed__item--googlenews">
       <div class="article__logo">
@@ -244,7 +249,7 @@
       </div>
     </div>
     {{/if}}
-    {{/googleNews}}
+    {{/googlenews}}
   </div>
 </main>
 
