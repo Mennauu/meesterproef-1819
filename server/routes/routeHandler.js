@@ -20,7 +20,7 @@ exports.login = (req, res) => {
 }
 
 exports.spotifyLogin = (req, res) => {
-  const scopes = ['user-read-private', 'user-read-email']
+  const scopes = ['user-read-private', 'user-read-email', 'user-read-currently-playing', 'user-read-playback-state']
   const authorizeURL = spotifyAuth.createAuthorizeURL(scopes)
 
   res.redirect(authorizeURL)
@@ -72,48 +72,96 @@ exports.home = async (req, res) => {
     const spotifyApi = new SpotifyWebApi({ accessToken: req.session.accessToken })
     const userID = req.session.userId
     const user = await userModel.findOne({ user: userID })
+    const spotifyPlayState = await spotifyApi.getMyCurrentPlaybackState({})
 
     if (user.user === userID && user.following.length > 0) {
       const artists = await spotifyApi.getArtists(user.following)
 
       if (artists) {
         let artistData = []
+        let socials = []
+        let thenewyorktimes = []
+        let googlenews = []
+        let instagram = []
 
         for (let artist of artists.body.artists) {
+
           artistData.push({
             id: artist.id,
             image: artist.images[1].url,
             name: artist.name
           })
+
+          const musicbrainz = await api.muzicbrainz(artist.name)
+          for (let link of musicbrainz.relations) {
+            const url = new URL(link.url.resource)
+            const domain = url.hostname.split(".").slice(-2).join(".")
+            const platform = domain.split('.')[0]
+            const username = url.pathname.substr(1).split('.')[0].replace(/\/$/, '').replace(/^.*\/(.*)$/, "$1")
+
+            socials.push({
+              [platform]: link.url.resource,
+              username
+            })
+          }
+
+          const tnyt = await api.thenewyorktimes(artist.name)
+          thenewyorktimes.push(tnyt)
+
+          const gn = await api.googlenews(artist.name)
+          if (gn[0] !== undefined) {
+            googlenews.push(gn[0])
+          }
         }
+
+        console.log(instagram)
+
+        const twitter = await api.twitter(socials)
+        const youtube = await api.youtube(socials)
 
         res.render('home', {
           layout: 'default',
           template: 'template__home',
-          following: artistData
-        })
-      } else {
-        res.render('home', {
-          layout: 'default',
-          template: 'template__home'
+          playback: spotifyPlayState.body,
+          following: artistData,
+          instagram,
+          twitter,
+          youtube,
+          thenewyorktimes,
+          googlenews
         })
       }
+    } else {
+      res.render('home', {
+        layout: 'default',
+        template: 'template__home',
+        playback: spotifyPlayState.body
+      })
     }
   } catch (error) {
     console.error(error)
   }
 }
 
-exports.search = (req, res) => {
-  res.render('search', {
-    layout: 'default',
-    template: 'template__search'
-  })
+exports.search = async (req, res) => {
+  try {
+    const spotifyApi = new SpotifyWebApi({ accessToken: req.session.accessToken })
+    const spotifyPlayState = await spotifyApi.getMyCurrentPlaybackState({})
+
+    res.render('search', {
+      layout: 'default',
+      template: 'template__search',
+      playback: spotifyPlayState.body
+    })
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 exports.artist = async (req, res) => {
   try {
     const spotifyApi = new SpotifyWebApi({ accessToken: req.session.accessToken })
+    const spotifyPlayState = await spotifyApi.getMyCurrentPlaybackState({})
     const userID = req.session.userId
     const artist = await spotifyApi.getArtist(req.params.id)
     console.log(artist)
@@ -121,10 +169,10 @@ exports.artist = async (req, res) => {
     const related = await spotifyApi.getArtistRelatedArtists(req.params.id)
     const user = await userModel.findOne({ user: userID })
     const topTracks = await spotifyApi.getArtistTopTracks(req.params.id, 'NL')
+
     let followingList = []
     let notFollowingList = []
     let topTracksList = []
-    let socials = []
     let trackNumber = 0
 
     if (user.user === userID) {
@@ -161,6 +209,7 @@ exports.artist = async (req, res) => {
       })
     }
 
+    let socials = []
     const musicbrainz = await api.muzicbrainz(name)
 
     for (let link of musicbrainz.relations) {
@@ -186,6 +235,7 @@ exports.artist = async (req, res) => {
     res.render('artist', {
       layout: 'default',
       template: 'template__artist',
+      playback: spotifyPlayState.body,
       artist: artist.body,
       songs: topTracksList.slice(0, 5),
       related: notFollowingList,
@@ -211,7 +261,6 @@ exports.logout = (req, res) => {
 
 exports.addArtist = async (req, res) => {
   try {
-    const spotifyApi = new SpotifyWebApi({ accessToken: req.session.accessToken })
     const artistID = Object.values(req.body).toString()
     const userID = req.session.userId
     const user = await userModel.findOne({ user: userID })

@@ -60,7 +60,7 @@ body {
 }
 
 main {
-  margin-bottom: 57px;
+  margin-bottom: 107px;
 }
 
 ul {
@@ -581,6 +581,10 @@ small {
   margin-bottom: 0.75em;
 }
 
+.template__search .spotify {
+  margin-left: -1em;
+}
+
 .template__artist main {
   margin-top: 15px;
 }
@@ -804,7 +808,77 @@ small {
 }
 
 /********************************
-  10. Miscellaneous
+  10. Spotify Player
+*********************************/
+.spotify {
+  position: fixed;
+  bottom: 57px;
+  height: 50px;
+  background-color: #282828;
+  z-index: 10;
+  width: 100%;
+  border-bottom: 1px solid #3F3F3F;
+  color: #fff;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 0 1em;
+}
+
+.spotify__image {
+  width: 30px;
+  height: 30px;
+  margin-right: 1em;
+}
+
+.spotify__song {
+  text-align: center;
+  width: 100%;
+}
+
+.spotify__artist {
+  margin-right: 0.4em;
+  display: inline-block;
+  text-transform: lowercase;
+}
+
+.spotify__artist::first-letter {
+  text-transform: uppercase;
+}
+
+.spotify__track {
+  margin-left: 0.4em;
+  display: inline-block;
+  color: #bebebe;
+  text-transform: lowercase;
+}
+
+.spotify__track::first-letter {
+  text-transform: uppercase;
+}
+
+.spotify__remote {
+  height: 30px;
+  min-width: 30px;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  margin-left: 1em;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+/********************************
+  11. Miscellaneous
 *********************************/
 .align-bottom {
   -ms-flex-item-align: end;

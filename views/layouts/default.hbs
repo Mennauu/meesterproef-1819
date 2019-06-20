@@ -15,6 +15,19 @@
 
   <body class="{{template}}">
     {{{body}}}
+    {{#playback}}
+    <div class="spotify">
+      <img class="spotify__image" src="{{item.album.images.2.url}}" alt="{{item.name}}">
+      <div class="spotify__song">
+        <span class="spotify__artist">{{item.artists.0.name}}</span>
+        &#183;
+        <span class="spotify__track">{{item.name}}</span>
+      </div>
+      <div class="spotify__remote">
+        &#9654;
+      </div>
+    </div>
+    {{/playback}}
     <footer class="navigation">
       <nav>
         <a href="/home" class="navigation__tab">

@@ -25,10 +25,11 @@
     <img class="feed__header--more" src="/images/more.svg" alt="more">
   </div> --}}
   <div class="feed">
+    {{!-- {{#instagram}}
     <div class="feed__item feed__item--instagram">
-      <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/BwWS0E0nFyY/"
+      <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/{{shortcode}}/"
         data-instgrm-version="12">
-        <div style="padding:16px;"> <a href="https://www.instagram.com/p/BwWS0E0nFyY/"
+        <div style="padding:16px;"> <a href="https://www.instagram.com/p/{{shortcode}}/"
             style=" background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;"
             target="_blank">
             <div style=" display: flex; flex-direction: row; align-items: center;">
@@ -107,29 +108,70 @@
             style=" color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; line-height:17px; margin-bottom:0; margin-top:8px; overflow:hidden; padding:8px 0 7px; text-align:center; text-overflow:ellipsis; white-space:nowrap;">
             <a href="https://www.instagram.com/p/BwWS0E0nFyY/"
               style=" color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:normal; line-height:17px; text-decoration:none;"
-              target="_blank">Een bericht gedeeld door Beyoncé (@beyonce)</a> op <time
+              target="_blank">Bericht van @{{username}} gedeeld </a> op <time
               style=" font-family:Arial,sans-serif; font-size:14px; line-height:17px;"
               datetime="2018-04-15T16:22:56+00:00">15 Apr 2018 om 9:22 (PDT)</time></p>
         </div>
       </blockquote>
     </div>
+    {{/instagram}} --}}
+    {{#twitter}}
     <div class="feed__item feed__item--twitter">
       <blockquote class="twitter-tweet" data-lang="nl">
-        <p lang="en" dir="ltr"><a
-            href="https://twitter.com/hashtag/HOMECOMING?src=hash&amp;ref_src=twsrc%5Etfw">#HOMECOMING</a> out now. <a
-            href="https://t.co/sa6OKEBvkb">https://t.co/sa6OKEBvkb</a> <a
-            href="https://t.co/f7fNhYuzLc">pic.twitter.com/f7fNhYuzLc</a></p>&mdash; BEYONCÉ (@Beyonce) <a
-          href="https://twitter.com/Beyonce/status/1118413878596198400?ref_src=twsrc%5Etfw">17 april 2019</a>
+        <p lang="en" dir="ltr"><a href="https://twitter.com/hashtag/TWEET?src=hash">#TWEET</a> is loading.</p>&mdash;
+        @{{username}} <a href="https://twitter.com/{{username}}/status/{{shortcode}}">{{creation_date}}</a>
       </blockquote>
     </div>
-    <div class="feed__item feed__item--facebook">
+    {{/twitter}}
+    {{#youtube}}
+    <div class="feed__item feed__item--youtube">
+      <div class="article__logo">
+        <img class="article__logo--image" src="/images/youtube-logo.png" alt="Youtube Logo">
+      </div>
+      <div class="feed__ratio--wrapper">
+        <iframe width="100%" height="auto" src="https://www.youtube.com/embed/{{shortcode}}" frameborder="0"
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+    {{/youtube}}
+    {{#thenewyorktimes}}
+    <div class="feed__item feed__item--newyorktimes">
+      <div class="article__logo">
+        <img class="article__logo--image" src="/images/tnyt-logo.png" alt="{{source}}">
+      </div>
+      <img src="https://static01.nyt.com/{{image}}" alt="{{source}}">
+      <div class="article__meta">
+        <p class="article__title">{{title}}</p>
+        <small class="article__author">{{created_by}}</small>
+        <small class="article__date">{{publication_date}}</small>
+        <p class="article__description">{{description}}</p>
+        <a href="{{thenewyorktimes_url}}" class="article__link" target="_blank">Continue reading</a>
+      </div>
+    </div>
+    {{/thenewyorktimes}}
+    {{#googlenews}}
+    <div class="feed__item feed__item--googlenews">
+      <div class="article__logo">
+        <img class="article__logo--image" src="{{logo}}" alt="{{source}}">
+      </div>
+      <img src="{{urlToImage}}" alt="{{source}}">
+      <div class="article__meta">
+        <p class="article__title">{{title}}</p>
+        <small class="article__author">{{author}}</small>
+        <small class="article__date">{{publishedAt}}</small>
+        <p class="article__description">{{content}}</p>
+        <a href="{{url}}" class="article__link" target="_blank">Continue reading</a>
+      </div>
+    </div>
+    {{/googlenews}}
+    {{!-- <div class="feed__item feed__item--facebook">
       <div class="fb-post"
         data-href="https://www.facebook.com/beyonce/photos/a.252225550600/10161884777280601/?type=3&theater"></div>
-    </div>
-    <div class="feed__item feed__item--youtube">
+    </div> --}}
+    {{!-- <div class="feed__item feed__item--youtube">
       <iframe width="100%" height="auto" src="https://www.youtube.com/embed/AKcpxwH5f6o" frameborder="0"
         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    </div>
+    </div> --}}
   </div>
 </main>
 

@@ -95,7 +95,7 @@ body {
 }
 
 main {
-  margin-bottom: 57px;
+  margin-bottom: 107px;
 }
 
 ul {
@@ -555,6 +555,10 @@ small {
     margin-top: 1em;
     margin-bottom: 0.75em;
   }
+
+  .spotify {
+    margin-left: -1em;
+  }
 }
 
 .template__artist {
@@ -762,7 +766,67 @@ small {
 }
 
 /********************************
-  10. Miscellaneous
+  10. Spotify Player
+*********************************/
+.spotify {
+  position: fixed;
+  bottom: 57px;
+  height: 50px;
+  background-color: $black-light;
+  z-index: 10;
+  width: 100%;
+  border-bottom: 1px solid $gray-dark;
+  color: $white;
+  display: flex;
+  align-items: center;
+  padding: 0 1em;
+
+  &__image {
+    width: 30px;
+    height: 30px;
+    margin-right: 1em;
+  }
+
+  &__song {
+    text-align: center;
+    width: 100%;
+  }
+
+  &__artist {
+    margin-right: 0.4em;
+    display: inline-block;
+    text-transform: lowercase;
+
+    &::first-letter {
+      text-transform: uppercase;
+    }
+  }
+
+  &__track {
+    margin-left: 0.4em;
+    display: inline-block;
+    color: $gray;
+    text-transform: lowercase;
+
+    &::first-letter {
+      text-transform: uppercase;
+    }
+  }
+
+  &__remote {
+    height: 30px;
+    min-width: 30px;
+    border: 1px solid $white;
+    border-radius: $rounded;
+    margin-left: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/********************************
+  11. Miscellaneous
 *********************************/
 
 .align-bottom {
