@@ -60,7 +60,7 @@ body {
 }
 
 main {
-  margin-bottom: 107px;
+  margin-bottom: 100px;
 }
 
 ul {
@@ -160,7 +160,7 @@ small {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 57px;
+  height: 50px;
   background-color: #282828;
 }
 
@@ -175,21 +175,7 @@ small {
       -ms-flex: 1;
           flex: 1;
   height: 100%;
-  line-height: 68px;
-}
-
-.container--center {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  text-align: center;
-  min-height: 100vh;
+  line-height: 60px;
 }
 
 /********************************
@@ -214,7 +200,7 @@ small {
   font-weight: bold;
   text-transform: uppercase;
   display: inline-block;
-  margin: auto;
+  margin: 0 auto;
 }
 
 .button--spotify:hover {
@@ -815,7 +801,7 @@ small {
 *********************************/
 .spotify {
   position: fixed;
-  bottom: 57px;
+  bottom: 50px;
   height: 50px;
   background-color: #282828;
   z-index: 10;
@@ -889,7 +875,54 @@ small {
 }
 
 /********************************
-  11. Miscellaneous
+  11. Authentication
+*********************************/
+.authentication {
+  padding: 1em;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  text-align: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  min-height: 100vh;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.authentication__logo {
+  max-width: 80%;
+  margin-bottom: 1.5em;
+}
+
+.authentication__note {
+  margin-top: 1em;
+  display: block;
+}
+
+.authentication__note a {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.authentication__note a:hover {
+  color: #fff;
+}
+
+.authentication__description {
+  max-width: 80%;
+  color: #fff;
+  margin-bottom: 6em;
+}
+
+/********************************
+  12. Miscellaneous
 *********************************/
 .align-bottom {
   -ms-flex-item-align: end;

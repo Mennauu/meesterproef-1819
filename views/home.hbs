@@ -198,6 +198,10 @@
 <script async defer crossorigin="anonymous"
   src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.3&appId=561819877300981&autoLogAppEvents=1"></script>
 <script defer>
+  const socket = io()
+  socket.on("getPlayBackState", data => {
+    console.log(data)
+  })
   const feed = document.querySelector('.feed')
 
   for (var i = feed.children.length; i >= 0; i--) {

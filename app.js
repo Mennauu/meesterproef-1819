@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const route = require('./server/routes/routeHandler.js')
 const cookieParser = require('cookie-parser')
 const app = express()
+const http = require('http').Server(app)
 const port = process.env.PORT || 3000
 
 require('./server/database/database.js')
@@ -37,7 +38,7 @@ app.engine('hbs', hbs({
   }
 }))
 
-app.listen(port, () => console.log(`Linernote listening on port ${port}!`))
+http.listen(port, () => console.log(`Linernote listening on port ${port}!`))
 
 app.get('/', route.root)
 app.get('/login', route.login)

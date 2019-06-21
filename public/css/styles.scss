@@ -94,7 +94,7 @@ body {
 }
 
 main {
-  margin-bottom: 107px;
+  margin-bottom: 100px;
 }
 
 ul {
@@ -181,7 +181,7 @@ small {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 57px;
+  height: 50px;
   background-color: $black-light;
 
   nav {
@@ -191,16 +191,8 @@ small {
   &__tab {
     flex: 1;
     height: 100%;
-    line-height: 68px;
+    line-height: 60px;
   }
-}
-
-.container--center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  min-height: 100vh;
 }
 
 /********************************
@@ -223,7 +215,7 @@ small {
     font-weight: bold;
     text-transform: uppercase;
     display: inline-block;
-    margin: auto;
+    margin: 0 auto;
 
     &:hover {
       background-color: $green-dark;
@@ -766,7 +758,7 @@ small {
 *********************************/
 .spotify {
   position: fixed;
-  bottom: 57px;
+  bottom: 50px;
   height: 50px;
   background-color: $black-light;
   z-index: 10;
@@ -823,7 +815,46 @@ small {
 }
 
 /********************************
-  11. Miscellaneous
+  11. Authentication
+*********************************/
+
+.authentication {
+  padding: 1em;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: 100vh;
+  justify-content: center;
+
+  &__logo {
+    max-width: 80%;
+    margin-bottom: 1.5em;
+  }
+
+  &__note {
+    margin-top: 1em;
+    display: block;
+
+    a {
+      font-weight: bold;
+      text-decoration: underline;
+
+      &:hover {
+        color: $white;
+      }
+    }
+  }
+
+  &__description {
+    max-width: 80%;
+    color: $white;
+    margin-bottom: 6em;
+  }
+}
+
+/********************************
+  12. Miscellaneous
 *********************************/
 
 .align-bottom {

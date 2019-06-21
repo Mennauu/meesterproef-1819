@@ -20,8 +20,8 @@
       {{#if item.name}}
       <img class="spotify__image" src="{{item.album.images.2.url}}" alt="{{item.name}}">
       <div class="spotify__song">
-        <span class="spotify__artist">{{item.artists.0.name}}</span>
         <span class="spotify__track">{{item.name}}</span>
+        <span class="spotify__artist">{{item.artists.0.name}}</span>
       </div>
       <div class="spotify__remote">
         &#9654;
@@ -46,6 +46,7 @@
         </a>
       </nav>
     </footer>
+    <script src="/socket.io/socket.io.js"></script>
     {{{_sections.script}}}
   </body>
 
