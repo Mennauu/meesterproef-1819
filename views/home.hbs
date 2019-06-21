@@ -25,7 +25,7 @@
     <img class="feed__header--more" src="/images/more.svg" alt="more">
   </div> --}}
   <div class="feed">
-    {{!-- {{#instagram}}
+    {{#instagram}}
     <div class="feed__item feed__item--instagram">
       <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/{{shortcode}}/"
         data-instgrm-version="12">
@@ -114,7 +114,7 @@
         </div>
       </blockquote>
     </div>
-    {{/instagram}} --}}
+    {{/instagram}}
     {{#twitter}}
     <div class="feed__item feed__item--twitter">
       <blockquote class="twitter-tweet" data-lang="nl">
@@ -164,6 +164,22 @@
       </div>
     </div>
     {{/googlenews}}
+    {{#ticketmaster}}
+    {{#if ticketmaster_url}}
+    <div class="feed__item feed__item--ticketmaster">
+      <div class="ticketmaster__logo">
+        <img class="ticketmaster__logo--image" src="{{artist_image}}" alt="{{name}}">
+        <span class="ticketmaster__name">{{name}}</span>
+        <img class="ticketmaster__logo--main" src="/images/ticketmaster.png" alt="Ticketmaster Logo">
+      </div>
+      <img class="ticketmaster__image" src="{{image}}" alt="{{name}}">
+      <a class="ticketmaster__link" href="{{ticketmaster_url}}">
+        <span class="ticketmaster__link--title">Buy tickets</span>
+        <img class="ticketmaster__link--arrow" src="/images/arrow-right.png" alt="arrow right">
+      </a>
+    </div>
+    {{/if}}
+    {{/ticketmaster}}
     {{!-- <div class="feed__item feed__item--facebook">
       <div class="fb-post"
         data-href="https://www.facebook.com/beyonce/photos/a.252225550600/10161884777280601/?type=3&theater"></div>
@@ -177,8 +193,15 @@
 
 {{#section 'script'}}
 <div id="fb-root"></div>
-<script async src="//www.instagram.com/embed.js"></script>
+<script async src="https://www.instagram.com/static/bundles/es6/EmbedSDK.js/47c7ec92d91e.js"></script>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 <script async defer crossorigin="anonymous"
   src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.3&appId=561819877300981&autoLogAppEvents=1"></script>
+<script defer>
+  const feed = document.querySelector('.feed')
+
+  for (var i = feed.children.length; i >= 0; i--) {
+    feed.appendChild(feed.children[Math.random() * i | 0])
+  }
+</script>
 {{/section}}

@@ -239,11 +239,6 @@ small {
   scrollbar-width: none;
 }
 
-.following::-webkit-scrollbar,
-.related::-webkit-scrollbar {
-  display: none;
-}
-
 .following__link,
 .related__link {
   margin-right: 0.7em;
@@ -268,21 +263,13 @@ small {
   text-decoration: none;
 }
 
-.related__image,
-.following__image {
+.following__image,
+.related__image {
   height: 86px;
   width: 86px;
   -o-object-fit: cover;
      object-fit: cover;
   border-radius: 50%;
-}
-
-.following__image {
-  border: 2px solid #7f6cff;
-}
-
-.related__image {
-  border: 2px solid transparent;
 }
 
 .following__name,
@@ -293,7 +280,8 @@ small {
   font-size: 0.875em;
 }
 
-.following__none {
+.following__none,
+.related__none {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -305,7 +293,8 @@ small {
   margin: auto;
 }
 
-.following__search {
+.following__search,
+.related__search {
   border-radius: 50%;
   background-color: #3F3F3F;
   height: 86px;
@@ -318,11 +307,25 @@ small {
           justify-content: center;
 }
 
-.following__search .following__add {
+.following__add,
+.related__add {
   height: 22px;
   -ms-flex-item-align: center;
       -ms-grid-row-align: center;
       align-self: center;
+}
+
+.following::-webkit-scrollbar,
+.related::-webkit-scrollbar {
+  display: none;
+}
+
+.following__image {
+  border: 2px solid #7f6cff;
+}
+
+.related__image {
+  border: 2px solid transparent;
 }
 
 .feed__header--wrapper {
@@ -404,6 +407,30 @@ small {
   padding-bottom: 56.25%;
 }
 
+.feed__description {
+  overflow: auto;
+  padding: 0.8em;
+  background-color: #fff;
+}
+
+.feed__avatar {
+  border-radius: 50%;
+  height: 37px;
+  width: 37px;
+  float: left;
+  margin-right: 1em;
+}
+
+.feed__name {
+  display: block;
+}
+
+.feed__wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .article__logo {
   max-height: 50px;
   padding: 14px;
@@ -463,7 +490,8 @@ small {
 
 .ticketmaster__logo--main {
   height: 12px;
-  margin-left: 0.5em;
+  margin-left: auto;
+  padding-left: 0.5em;
 }
 
 .ticketmaster__name {
@@ -497,30 +525,6 @@ small {
 
 .ticketmaster__link--arrow {
   margin-left: auto;
-}
-
-.feed__description {
-  overflow: auto;
-  padding: 0.8em;
-  background-color: #fff;
-}
-
-.feed__avatar {
-  border-radius: 50%;
-  height: 37px;
-  width: 37px;
-  float: left;
-  margin-right: 1em;
-}
-
-.feed__name {
-  display: block;
-}
-
-.feed__wrapper {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .artists {
@@ -590,7 +594,7 @@ small {
 }
 
 /********************************
-  8. Override
+  8. Overrides
 *********************************/
 .instagram-media {
   background-color: #fff !important;
@@ -674,11 +678,15 @@ small {
   margin-left: 1em;
 }
 
-.carousel__image--wrapper {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
+.swiper-pagination-bullet {
+  background-color: #282828;
+  opacity: 1;
+  width: 8px;
+  height: 8px;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #fff;
 }
 
 .carousel__image {
@@ -688,6 +696,13 @@ small {
      object-fit: cover;
   -o-object-position: top;
      object-position: top;
+}
+
+.carousel__image--wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
 }
 
 .carousel__gradient {
@@ -731,30 +746,11 @@ small {
   transition: 0.5s;
 }
 
-.swiper-pagination-bullet {
-  background-color: #282828;
-  opacity: 1;
-  width: 8px;
-  height: 8px;
-}
-
-.swiper-pagination-bullet-active {
-  background-color: #fff;
-}
-
-.dark-slide {
-  background: rgba(23, 23, 23, 0.87);
-}
-
 .carousel__title {
   text-align: center;
   display: block;
   font-size: 1.25em;
   margin-top: 2em;
-}
-
-.carousel__track--wrapper {
-  padding: 2.5em 1em 2em 1em;
 }
 
 .carousel__track {
@@ -763,6 +759,10 @@ small {
   display: flex;
   font-weight: 300;
   margin-bottom: 1.35em;
+}
+
+.carousel__track--wrapper {
+  padding: 2.5em 1em 2em 1em;
 }
 
 .carousel__track--more {
@@ -781,16 +781,11 @@ small {
   margin-right: 1em;
 }
 
-.carousel__track--button,
-.carousel__description--button {
+.carousel__track--button {
   text-transform: uppercase;
   text-align: center;
   display: block;
   color: #848484;
-}
-
-.carousel__description--button {
-  margin-top: 26px;
 }
 
 .carousel__description {
@@ -805,6 +800,14 @@ small {
   -webkit-box-orient: vertical;
   display: -webkit-box;
   -webkit-line-clamp: 9;
+}
+
+.carousel__description--button {
+  text-transform: uppercase;
+  text-align: center;
+  display: block;
+  color: #848484;
+  margin-top: 26px;
 }
 
 /********************************
@@ -837,6 +840,16 @@ small {
 .spotify__song {
   text-align: center;
   width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
 
 .spotify__artist {
@@ -883,5 +896,9 @@ small {
 .align-bottom {
   -ms-flex-item-align: end;
       align-self: flex-end;
+}
+
+.dark-slide {
+  background: rgba(23, 23, 23, 0.87);
 }
 /*# sourceMappingURL=styles.css.map */

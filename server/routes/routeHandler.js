@@ -79,12 +79,16 @@ exports.home = async (req, res) => {
 
       if (artists) {
         let artistData = []
-        let socials = []
         let thenewyorktimes = []
         let googlenews = []
         let instagram = []
+        let ticketmaster = []
+        let twitter = []
+        let youtube = []
 
         for (let artist of artists.body.artists) {
+          let socials = []
+          const name = artist.name.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
 
           artistData.push({
             id: artist.id,
@@ -92,7 +96,7 @@ exports.home = async (req, res) => {
             name: artist.name
           })
 
-          const musicbrainz = await api.muzicbrainz(artist.name)
+          const musicbrainz = await api.muzicbrainz(name)
           for (let link of musicbrainz.relations) {
             const url = new URL(link.url.resource)
             const domain = url.hostname.split(".").slice(-2).join(".")
@@ -105,19 +109,30 @@ exports.home = async (req, res) => {
             })
           }
 
-          const tnyt = await api.thenewyorktimes(artist.name)
+          setTimeout(async () => {
+            const ig = await api.instagram(socials)
+            instagram.push(ig)
+
+            const twit = await api.twitter(socials)
+            twitter.push(twit)
+
+            const yt = await api.youtube(socials)
+            youtube.push(yt)
+
+            socials = []
+          }, 1000)
+
+          const tm = await api.ticketmaster(name, artist.images[1].url)
+          ticketmaster.push(tm)
+
+          const tnyt = await api.thenewyorktimes(name)
           thenewyorktimes.push(tnyt)
 
-          const gn = await api.googlenews(artist.name)
+          const gn = await api.googlenews(name)
           if (gn[0] !== undefined) {
             googlenews.push(gn[0])
           }
         }
-
-        console.log(instagram)
-
-        const twitter = await api.twitter(socials)
-        const youtube = await api.youtube(socials)
 
         res.render('home', {
           layout: 'default',
@@ -126,9 +141,10 @@ exports.home = async (req, res) => {
           following: artistData,
           instagram,
           twitter,
-          youtube,
           thenewyorktimes,
-          googlenews
+          googlenews,
+          ticketmaster,
+          youtube
         })
       }
     } else {
@@ -164,16 +180,15 @@ exports.artist = async (req, res) => {
     const spotifyPlayState = await spotifyApi.getMyCurrentPlaybackState({})
     const userID = req.session.userId
     const artist = await spotifyApi.getArtist(req.params.id)
-    console.log(artist)
     const name = artist.body.name.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
     const related = await spotifyApi.getArtistRelatedArtists(req.params.id)
     const user = await userModel.findOne({ user: userID })
     const topTracks = await spotifyApi.getArtistTopTracks(req.params.id, 'NL')
-
     let followingList = []
     let notFollowingList = []
     let topTracksList = []
     let trackNumber = 0
+    let socials = []
 
     if (user.user === userID) {
       const result = await userModel.find({})
@@ -209,7 +224,6 @@ exports.artist = async (req, res) => {
       })
     }
 
-    let socials = []
     const musicbrainz = await api.muzicbrainz(name)
 
     for (let link of musicbrainz.relations) {
