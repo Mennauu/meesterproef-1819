@@ -3,30 +3,18 @@ const express = require('express')
 const hbs = require('express-handlebars')
 const bodyParser = require('body-parser')
 const route = require('./server/routes/routeHandler.js')
-const session = require('express-session')
-const MongoStore = require('connect-mongo')(session)
-const mongoose = require('mongoose')
+const cookieParser = require('cookie-parser')
 const app = express()
 const port = process.env.PORT || 3000
-const db = mongoose.connection
 
 require('./server/database/database.js')
 require('dotenv').config()
 
-
 app.disable('x-powered-by')
 
+app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: true,
-  saveUninitialized: false,
-  store: new MongoStore({
-    mongooseConnection: db
-  })
-}))
-
 // app.use(shrinkRay())
 app.use(express.static(__dirname + '/public', {
   maxAge: "365d",

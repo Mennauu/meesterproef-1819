@@ -792,7 +792,6 @@ small {
   }
 
   &__artist {
-    margin-right: 0.4em;
     display: inline-block;
     text-transform: lowercase;
 
@@ -802,7 +801,6 @@ small {
   }
 
   &__track {
-    margin-left: 0.4em;
     display: inline-block;
     color: $gray;
     text-transform: lowercase;

@@ -31,30 +31,25 @@ exports.spotifyCallback = async (req, res) => {
     const code = req.query.code
     const auth = await spotifyAuth.authorizationCodeGrant(code)
     const spotifyApi = new SpotifyWebApi({ accessToken: auth.body.access_token })
-
-    // THIS SETS A GLOBAL ACCESS TOKEN, WE NEED ONE PER USER (session)
-    // spotifyApi.setAccessToken(auth.body.access_token)
-    // spotifyApi.setRefreshToken(auth.body.refresh_token)
-
     const user = await spotifyApi.getMe()
     const userID = user.body.id
     const newUser = new userModel({ user: userID })
 
     userModel.findOne({ user: userID }, async (err, user) => {
       if (user !== null && user.user === userID) {
-        req.session.userId = userID
-        req.session.accessToken = auth.body.access_token
 
         console.log(`User: ${userID} already in database`)
+        res.cookie('spotify_access_token', auth.body.access_token)
+        res.cookie('spotify_user_id', userID)
         res.redirect(`${process.env.LOCAL_URI}home`)
       } else {
         const add = await newUser.save()
 
         if (add) {
-          req.session.userId = userID
-          req.session.accessToken = auth.body.access_token
 
           console.log(`User: ${userID} has been saved`)
+          res.cookie('spotify_access_token', auth.body.access_token)
+          res.cookie('spotify_user_id', userID)
           res.redirect(`${process.env.LOCAL_URI}home`)
         } else {
           console.log('There was an error trying to save the user')
@@ -69,12 +64,12 @@ exports.spotifyCallback = async (req, res) => {
 
 exports.home = async (req, res) => {
   try {
-    const spotifyApi = new SpotifyWebApi({ accessToken: req.session.accessToken })
-    const userID = req.session.userId
+    const spotifyApi = new SpotifyWebApi({ accessToken: req.cookies.spotify_access_token })
+    const userID = req.cookies.spotify_user_id
     const user = await userModel.findOne({ user: userID })
     const spotifyPlayState = await spotifyApi.getMyCurrentPlaybackState({})
 
-    if (user.user === userID && user.following.length > 0) {
+    if (user.following.length > 0) {
       const artists = await spotifyApi.getArtists(user.following)
 
       if (artists) {
@@ -110,27 +105,27 @@ exports.home = async (req, res) => {
           }
 
           setTimeout(async () => {
-            const ig = await api.instagram(socials)
-            instagram.push(ig)
+            const instagramData = await api.instagram(socials)
+            instagram.push(instagramData)
 
-            const twit = await api.twitter(socials)
-            twitter.push(twit)
+            const twitterData = await api.twitter(socials)
+            twitter.push(twitterData)
 
-            const yt = await api.youtube(socials)
-            youtube.push(yt)
+            const youtubeData = await api.youtube(socials)
+            youtube.push(youtubeData)
 
             socials = []
           }, 1000)
 
-          const tm = await api.ticketmaster(name, artist.images[1].url)
-          ticketmaster.push(tm)
+          const ticketmasterData = await api.ticketmaster(name, artist.images[1].url)
+          ticketmaster.push(ticketmasterData)
 
-          const tnyt = await api.thenewyorktimes(name)
-          thenewyorktimes.push(tnyt)
+          const thenewyorktimesData = await api.thenewyorktimes(name)
+          thenewyorktimes.push(thenewyorktimesData)
 
-          const gn = await api.googlenews(name)
-          if (gn[0] !== undefined) {
-            googlenews.push(gn[0])
+          const googlenewsData = await api.googlenews(name)
+          if (googlenewsData[0] !== undefined) {
+            googlenews.push(googlenewsData[0])
           }
         }
 
@@ -161,7 +156,7 @@ exports.home = async (req, res) => {
 
 exports.search = async (req, res) => {
   try {
-    const spotifyApi = new SpotifyWebApi({ accessToken: req.session.accessToken })
+    const spotifyApi = new SpotifyWebApi({ accessToken: req.cookies.spotify_access_token })
     const spotifyPlayState = await spotifyApi.getMyCurrentPlaybackState({})
 
     res.render('search', {
@@ -176,9 +171,9 @@ exports.search = async (req, res) => {
 
 exports.artist = async (req, res) => {
   try {
-    const spotifyApi = new SpotifyWebApi({ accessToken: req.session.accessToken })
+    const spotifyApi = new SpotifyWebApi({ accessToken: req.cookies.spotify_access_token })
     const spotifyPlayState = await spotifyApi.getMyCurrentPlaybackState({})
-    const userID = req.session.userId
+    const userID = req.cookies.spotify_user_id
     const artist = await spotifyApi.getArtist(req.params.id)
     const name = artist.body.name.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
     const related = await spotifyApi.getArtistRelatedArtists(req.params.id)
@@ -276,21 +271,14 @@ exports.logout = (req, res) => {
 exports.addArtist = async (req, res) => {
   try {
     const artistID = Object.values(req.body).toString()
-    const userID = req.session.userId
+    const userID = req.cookies.spotify_user_id
     const user = await userModel.findOne({ user: userID })
 
-    if (user.user === userID) {
-      const result = await userModel.findOne({ following: { "$in": [artistID] } })
-
-      if (result === null) {
-        const update = await userModel.updateOne({ $push: { following: artistID } })
-
-        if (update) {
-          console.log('RESULT IS TOEGEVOEGD')
-        } else {
-          console.log('NIET TOEGEVOEGD, STAAT AL IN DE LIJST')
-        }
-      }
+    if (user.following.includes(artistID)) {
+      console.log('NIET TOEGEVOEGD, STAAT AL IN DE LIJST')
+    } else {
+      await userModel.updateOne({ user: userID }, { $push: { following: artistID } })
+      console.log('RESULT IS TOEGEVOEGD')
     }
   } catch (error) {
     console.error(error)
@@ -300,7 +288,7 @@ exports.addArtist = async (req, res) => {
 exports.searchArtists = async (req, res) => {
   try {
     const artists = []
-    const spotifyApi = new SpotifyWebApi({ accessToken: req.session.accessToken })
+    const spotifyApi = new SpotifyWebApi({ accessToken: req.cookies.spotify_access_token })
     const searchInput = Object.values(req.body).toString()
     const data = await spotifyApi.searchArtists(searchInput)
 

@@ -853,7 +853,6 @@ small {
 }
 
 .spotify__artist {
-  margin-right: 0.4em;
   display: inline-block;
   text-transform: lowercase;
 }
@@ -863,7 +862,6 @@ small {
 }
 
 .spotify__track {
-  margin-left: 0.4em;
   display: inline-block;
   color: #bebebe;
   text-transform: lowercase;
