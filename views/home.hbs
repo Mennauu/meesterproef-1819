@@ -198,11 +198,31 @@
 <script async defer crossorigin="anonymous"
   src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.3&appId=561819877300981&autoLogAppEvents=1"></script>
 <script defer>
+  const spotify = document.querySelector('.spotify')
+  const feed = document.querySelector('.feed')
+  let id = document.querySelector('.spotify__id').innerText
   const socket = io()
+
   socket.on("getPlayBackState", data => {
     console.log(data)
+    if (data.item.id !== id) {
+      const html = `
+        <img class="spotify__image" src="${data.item.album.images[2].url}" alt="${data.item.name}">
+        <div class="spotify__song">
+          <span class="spotify__track">${data.item.name}</span>
+          <span class="spotify__artist">${data.item.artists[0].name}</span>
+          <span class="spotify__id">${data.item.id}</span>
+        </div>
+        <div class="spotify__remote">
+          &#9654;
+        </div>`
+
+
+      while (spotify.firstChild) spotify.removeChild(spotify.firstChild)
+      spotify.insertAdjacentHTML('afterbegin', html)
+      id = document.querySelector('.spotify__id').innerText
+    }
   })
-  const feed = document.querySelector('.feed')
 
   for (var i = feed.children.length; i >= 0; i--) {
     feed.appendChild(feed.children[Math.random() * i | 0])

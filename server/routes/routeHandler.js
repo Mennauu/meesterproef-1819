@@ -1,9 +1,5 @@
 import * as api from '../apis/all.js'
 
-const express = require('express')
-const app = express()
-const http = require('http').Server(app)
-const io = require('socket.io')(http)
 const SpotifyWebApi = require('spotify-web-api-node')
 const userModel = require('../database/models/user.js')
 const spotifyAuth = new SpotifyWebApi({
@@ -72,23 +68,6 @@ exports.home = async (req, res) => {
     const userID = req.cookies.spotify_user_id
     const user = await userModel.findOne({ user: userID })
     const spotifyPlayState = await spotifyApi.getMyCurrentPlaybackState({})
-
-    io.on("connection", socket => {
-      console.log("New client connected"), setInterval(
-        () => getApiAndEmit(socket),
-        1000
-      )
-      socket.on("disconnect", () => console.log("Client disconnected"))
-    })
-
-    const getApiAndEmit = async socket => {
-      try {
-        const res = await spotifyApi.getMyCurrentPlaybackState({})
-        socket.emit("getPlayBackState", res.body)
-      } catch (error) {
-        console.error(`Error: ${error.code}`)
-      }
-    }
 
     if (user.following.length > 0) {
       const artists = await spotifyApi.getArtists(user.following)

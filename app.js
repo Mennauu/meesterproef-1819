@@ -1,11 +1,13 @@
 // const shrinkRay   = require('shrink-ray-current')
 const express = require('express')
+const SpotifyWebApi = require('spotify-web-api-node')
 const hbs = require('express-handlebars')
 const bodyParser = require('body-parser')
 const route = require('./server/routes/routeHandler.js')
 const cookieParser = require('cookie-parser')
 const app = express()
 const http = require('http').Server(app)
+const io = require('socket.io')(http)
 const port = process.env.PORT || 3000
 
 require('./server/database/database.js')
@@ -38,8 +40,6 @@ app.engine('hbs', hbs({
   }
 }))
 
-http.listen(port, () => console.log(`Linernote listening on port ${port}!`))
-
 app.get('/', route.root)
 app.get('/login', route.login)
 app.get('/spotify/login', route.spotifyLogin)
@@ -51,3 +51,33 @@ app.get('/logout', route.logout)
 
 app.post('/add-artist', route.addArtist)
 app.post('/search', route.searchArtists)
+
+io.on("connect", socket => {
+  console.log(socket)
+  console.log("New client connected")
+
+  setInterval(async () => {
+    try {
+      let token = ''
+      const cookies = socket.handshake.headers.cookie
+      const split = cookies.split(/[:;]/)
+
+      for (let cook of split) {
+        const cookie = cook.substring(cook.indexOf('=') + 1)
+        if (cookie.length > 50) token = cookie
+      }
+
+      const spotifyApi = new SpotifyWebApi({ accessToken: token })
+      const result = await spotifyApi.getMyCurrentPlaybackState({})
+      if (result.body.is_playing === true) {
+        socket.emit("getPlayBackState", result.body)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }, 1500)
+
+  socket.on("disconnect", () => console.log("Client disconnected"))
+})
+
+http.listen(port, () => console.log(`Linernote listening on port ${port}!`))

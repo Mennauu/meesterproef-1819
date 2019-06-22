@@ -874,6 +874,10 @@ small {
           justify-content: center;
 }
 
+.spotify__id {
+  display: none;
+}
+
 /********************************
   11. Authentication
 *********************************/
