@@ -74,15 +74,8 @@ exports.home = async (req, res) => {
 
       if (artists) {
         let artistData = []
-        let thenewyorktimes = []
-        let googlenews = []
-        let instagram = []
-        let ticketmaster = []
-        let twitter = []
-        let youtube = []
 
         for (let artist of artists.body.artists) {
-          let socials = []
           const name = artist.name.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
 
           artistData.push({
@@ -91,55 +84,13 @@ exports.home = async (req, res) => {
             name: artist.name
           })
 
-          const musicbrainz = await api.muzicbrainz(name)
-          for (let link of musicbrainz.relations) {
-            const url = new URL(link.url.resource)
-            const domain = url.hostname.split(".").slice(-2).join(".")
-            const platform = domain.split('.')[0]
-            const username = url.pathname.substr(1).split('.')[0].replace(/\/$/, '').replace(/^.*\/(.*)$/, "$1")
-
-            socials.push({
-              [platform]: link.url.resource,
-              username
-            })
-          }
-
-          setTimeout(async () => {
-            const instagramData = await api.instagram(socials)
-            instagram.push(instagramData)
-
-            const twitterData = await api.twitter(socials)
-            twitter.push(twitterData)
-
-            const youtubeData = await api.youtube(socials)
-            youtube.push(youtubeData)
-
-            socials = []
-          }, 1000)
-
-          const ticketmasterData = await api.ticketmaster(name, artist.images[1].url)
-          ticketmaster.push(ticketmasterData)
-
-          const thenewyorktimesData = await api.thenewyorktimes(name)
-          thenewyorktimes.push(thenewyorktimesData)
-
-          const googlenewsData = await api.googlenews(name)
-          if (googlenewsData[0] !== undefined) {
-            googlenews.push(googlenewsData[0])
-          }
         }
 
         res.render('home', {
           layout: 'default',
           template: 'template__home',
           playback: spotifyPlayState.body,
-          following: artistData,
-          instagram,
-          twitter,
-          thenewyorktimes,
-          googlenews,
-          ticketmaster,
-          youtube
+          following: artistData
         })
       }
     } else {
@@ -175,7 +126,6 @@ exports.artist = async (req, res) => {
     let notFollowingList = []
     let topTracksList = []
     let trackNumber = 0
-    let socials = []
     const spotifyApi = new SpotifyWebApi({ accessToken: req.cookies.spotify_access_token })
     const spotifyPlayState = await spotifyApi.getMyCurrentPlaybackState({})
     const artist = await spotifyApi.getArtist(req.params.id)
@@ -216,27 +166,7 @@ exports.artist = async (req, res) => {
       })
     }
 
-    const musicbrainz = await api.muzicbrainz(name)
-
-    for (let link of musicbrainz.relations) {
-      const url = new URL(link.url.resource)
-      const domain = url.hostname.split(".").slice(-2).join(".")
-      const platform = domain.split('.')[0]
-      const username = url.pathname.substr(1).split('.')[0].replace(/\/$/, '').replace(/^.*\/(.*)$/, "$1")
-
-      socials.push({
-        [platform]: link.url.resource,
-        username
-      })
-    }
-
     const wikipedia = await api.wikipedia(name)
-    const instagram = await api.instagram(socials)
-    const twitter = await api.twitter(socials)
-    const youtube = await api.youtube(socials)
-    const thenewyorktimes = await api.thenewyorktimes(name)
-    const ticketmaster = await api.ticketmaster(name, artist.body.images[0].url)
-    const googlenews = await api.googlenews(name)
 
     res.render('artist', {
       layout: 'default',
@@ -248,13 +178,7 @@ exports.artist = async (req, res) => {
       related: notFollowingList,
       relatedFollowing: followingList,
       spotifyURL: topTracks.body.tracks[0].external_urls.spotify,
-      wikipedia,
-      instagram,
-      twitter,
-      youtube,
-      thenewyorktimes,
-      ticketmaster,
-      googlenews
+      wikipedia
     })
   } catch (error) {
     console.error(error)
@@ -276,7 +200,7 @@ exports.addArtist = async (req, res) => {
       console.log('NIET TOEGEVOEGD, STAAT AL IN DE LIJST')
     } else {
       await userModel.updateOne({ user: userID }, { $push: { following: artistID } })
-      console.log('RESULT IS TOEGEVOEGD')
+      console.log('ARTIEST IS TOEGEVOEGD')
     }
   } catch (error) {
     console.error(error)

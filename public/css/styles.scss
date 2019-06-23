@@ -435,6 +435,10 @@ small {
       color: $black;
     }
   }
+
+  &__image {
+    width: 100%;
+  }
 }
 
 .ticketmaster {
@@ -447,6 +451,7 @@ small {
       height: 30px;
       width: 30px;
       border-radius: $rounded;
+      object-fit: cover;
     }
 
     &--main {
@@ -917,14 +922,68 @@ small {
   border-radius: $border-radius;
   transition: 0.4s;
   opacity: 0;
+
+  &:after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 40px;
+    border-top: 10px solid rgba($black-dark, 0.8);
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent; 
+  }
 }
 
-.inactive-message:after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 40px;
-  border-top: 10px solid rgba($black-dark, 0.8);
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent; 
+$offset: 187;
+$duration: 1.4s;
+
+@keyframes rotator {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(270deg); }
+}
+
+.path {
+  stroke-dasharray: $offset;
+  stroke-dashoffset: 0;
+  transform-origin: center;
+  animation:
+    dash $duration ease-in-out infinite, 
+    colors ($duration*4) ease-in-out infinite;
+}
+
+@keyframes colors {
+	0% { stroke: $white; }
+	25% { stroke: $white; }
+	50% { stroke: $white; }
+	75% { stroke: $white; }
+  100% { stroke: $white; }
+}
+
+@keyframes dash {
+ 0% { stroke-dashoffset: $offset; }
+ 50% {
+   stroke-dashoffset: $offset/4;
+   transform:rotate(135deg);
+ }
+ 100% {
+   stroke-dashoffset: $offset;
+   transform:rotate(450deg);
+ }
+}
+
+.loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 2em;
+
+  &__message {
+    color: $white;
+    margin-top: 1em;
+  }
+
+  &__spinner {
+    animation: rotator $duration linear infinite;
+  }
 }

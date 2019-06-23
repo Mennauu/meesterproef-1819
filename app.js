@@ -1,4 +1,5 @@
-import { getPlayBackState } from './server/utils/getPlayBackState.js'
+import { getPlayBackState } from './server/modules/getPlayBackState.js'
+import { getArtistData, getMultipleArtistData } from './server/modules/getArtistdata.js'
 
 // const shrinkRay   = require('shrink-ray-current')
 const express = require('express')
@@ -56,6 +57,12 @@ app.post('/search', route.searchArtists)
 io.on("connect", socket => {
   getPlayBackState(socket)
 
+  socket.on('artist-name', async (name) => {
+    socket.emit('artist-data', await getArtistData(name))
+  })
+  socket.on('following-list', async (data) => {
+    socket.emit('artist-data', await getMultipleArtistData(data.followList, data.token))
+  })
   socket.on("disconnect", () => console.log("Client disconnected"))
 })
 

@@ -3,7 +3,7 @@
   <nav class="following">
     {{#if following.length}}
     {{#following}}
-    <a href="/artist/{{id}}" class="following__link">
+    <a href="/artist/{{id}}" class="following__link" id="{{id}}">
       <img src="{{image}}" alt="{{name}}" class="following__image">
       <span class="following__name">{{name}}</span>
     </a>
@@ -25,12 +25,23 @@
     <img class="feed__header--more" src="/images/more.svg" alt="more">
   </div> --}}
   <div class="feed">
-    {{#instagram}}
-    {{#if shortcode}}
+    <div class="loader">
+      <svg class="loader__spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+        <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+      </svg>
+      <span class="loader__message">Loading artists feeds</span>
+    </div>
+  </div>
+</main>
+
+<script id="artist-data-template" type="text/x-handlebars-template">
+\{{#if instagram}}
+  \{{#each instagram}}
+    \{{#if shortcode}}
     <div class="feed__item feed__item--instagram">
-      <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/{{shortcode}}/"
+      <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/\{{shortcode}}/"
         data-instgrm-version="12">
-        <div style="padding:16px;"> <a href="https://www.instagram.com/p/{{shortcode}}/"
+        <div style="padding:16px;"> <a href="https://www.instagram.com/p/\{{shortcode}}/"
             style=" background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;"
             target="_blank">
             <div style=" display: flex; flex-direction: row; align-items: center;">
@@ -107,111 +118,126 @@
           </a>
           <p
             style=" color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; line-height:17px; margin-bottom:0; margin-top:8px; overflow:hidden; padding:8px 0 7px; text-align:center; text-overflow:ellipsis; white-space:nowrap;">
-            <a href="https://www.instagram.com/p/BwWS0E0nFyY/"
+            <a href="https://www.instagram.com/p/\{{shortcode}}/"
               style=" color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:normal; line-height:17px; text-decoration:none;"
-              target="_blank">Bericht van @{{username}} gedeeld </a> op <time
+              target="_blank">Bericht van @\{{username}} gedeeld </a> op <time
               style=" font-family:Arial,sans-serif; font-size:14px; line-height:17px;"
               datetime="2018-04-15T16:22:56+00:00">15 Apr 2018 om 9:22 (PDT)</time></p>
         </div>
       </blockquote>
     </div>
-    {{/if}}
-    {{/instagram}}
-    {{#twitter}}
-    {{#if shortcode}}
+    \{{/if}}
+  \{{/each}}
+\{{/if}}
+\{{#if twitter}}
+  \{{#each twitter}}
+    \{{#if shortcode}}
     <div class="feed__item feed__item--twitter">
       <blockquote class="twitter-tweet" data-lang="nl">
         <p lang="en" dir="ltr"><a href="https://twitter.com/hashtag/TWEET?src=hash">#TWEET</a> is loading.</p>&mdash;
-        @{{username}} <a href="https://twitter.com/{{username}}/status/{{shortcode}}">{{creation_date}}</a>
+        @\{{username}} <a href="https://twitter.com/\{{username}}/status/\{{shortcode}}">\{{creation_date}}</a>
       </blockquote>
     </div>
-    {{/if}}
-    {{/twitter}}
-    {{#youtube}}
-    {{#if shortcode}}
+    \{{/if}}
+  \{{/each}}
+\{{/if}}
+  {{!-- <div class="feed__item feed__item--facebook">
+    <div class="fb-post"
+      data-href="https://www.facebook.com/beyonce/photos/a.252225550600/10161884777280601/?type=3&theater"></div>
+  </div> --}}
+\{{#if youtube}}
+  \{{#each youtube}}
+    \{{#if shortcode}}
     <div class="feed__item feed__item--youtube">
       <div class="article__logo">
         <img class="article__logo--image" src="/images/youtube-logo.png" alt="Youtube Logo">
       </div>
       <div class="feed__ratio--wrapper">
-        <iframe width="100%" height="auto" src="https://www.youtube.com/embed/{{shortcode}}" frameborder="0"
+        <iframe width="100%" height="auto" src="https://www.youtube.com/embed/\{{shortcode}}" frameborder="0"
           allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
     </div>
-    {{/if}}
-    {{/youtube}}
-    {{#thenewyorktimes}}
-    {{#if thenewyorktimes_url}}
+    \{{/if}}
+  \{{/each}}
+\{{/if}}
+\{{#if thenewyorktimes}}
+  \{{#each thenewyorktimes}}
+    \{{#if thenewyorktimes_url}}
     <div class="feed__item feed__item--newyorktimes">
       <div class="article__logo">
-        <img class="article__logo--image" src="/images/tnyt-logo.png" alt="{{source}}">
+        <img class="article__logo--image" src="/images/tnyt-logo.png" alt="\{{source}}">
       </div>
-      <img src="https://static01.nyt.com/{{image}}" alt="{{source}}">
+      <img class="article__image" src="https://static01.nyt.com/\{{image}}" alt="\{{source}}">
       <div class="article__meta">
-        <p class="article__title">{{title}}</p>
-        <small class="article__author">{{created_by}}</small>
-        <small class="article__date">{{publication_date}}</small>
-        <p class="article__description">{{description}}</p>
-        <a href="{{thenewyorktimes_url}}" class="article__link" target="_blank">Continue reading</a>
+        <p class="article__title">\{{title}}</p>
+        <small class="article__author">\{{created_by}}</small>
+        <small class="article__date">\{{publication_date}}</small>
+        <p class="article__description">\{{description}}</p>
+        <a href="\{{thenewyorktimes_url}}" class="article__link" target="_blank">Continue reading</a>
       </div>
-    </div>
-    {{/if}}
-    {{/thenewyorktimes}}
-    {{#googlenews}}
-    {{#if url}}
-    <div class="feed__item feed__item--googlenews">
-      <div class="article__logo">
-        <img class="article__logo--image" src="{{logo}}" alt="{{source}}">
-      </div>
-      <img src="{{urlToImage}}" alt="{{source}}">
-      <div class="article__meta">
-        <p class="article__title">{{title}}</p>
-        <small class="article__author">{{author}}</small>
-        <small class="article__date">{{publishedAt}}</small>
-        <p class="article__description">{{content}}</p>
-        <a href="{{url}}" class="article__link" target="_blank">Continue reading</a>
-      </div>
-    </div>
-    {{/if}}
-    {{/googlenews}}
-    {{#ticketmaster}}
-    {{#if ticketmaster_url}}
+    </div>  
+    \{{/if}}
+  \{{/each}}
+\{{/if}}
+
+\{{#if ticketmaster}}
+  \{{#each ticketmaster}}
+    \{{#if ticketmaster_url}}
     <div class="feed__item feed__item--ticketmaster">
       <div class="ticketmaster__logo">
-        <img class="ticketmaster__logo--image" src="{{artist_image}}" alt="{{name}}">
-        <span class="ticketmaster__name">{{name}}</span>
+        <img class="ticketmaster__logo--image" src="\{{image}}" alt="\{{name}}">
+        <span class="ticketmaster__name">\{{name}}</span>
         <img class="ticketmaster__logo--main" src="/images/ticketmaster.png" alt="Ticketmaster Logo">
       </div>
-      <img class="ticketmaster__image" src="{{image}}" alt="{{name}}">
-      <a class="ticketmaster__link" href="{{ticketmaster_url}}">
+      <img class="ticketmaster__image" src="\{{image}}" alt="\{{name}}">
+      <a class="ticketmaster__link" href="\{{ticketmaster_url}}">
         <span class="ticketmaster__link--title">Buy tickets</span>
         <img class="ticketmaster__link--arrow" src="/images/arrow-right.png" alt="arrow right">
       </a>
     </div>
-    {{/if}}
-    {{/ticketmaster}}
-    {{!-- <div class="feed__item feed__item--facebook">
-      <div class="fb-post"
-        data-href="https://www.facebook.com/beyonce/photos/a.252225550600/10161884777280601/?type=3&theater"></div>
-    </div> --}}
-    {{!-- <div class="feed__item feed__item--youtube">
-      <iframe width="100%" height="auto" src="https://www.youtube.com/embed/AKcpxwH5f6o" frameborder="0"
-        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    </div> --}}
+    \{{/if}}
+  \{{/each}}
+\{{/if}}
+  {{!-- {{#guardian}}
+  {{#if guardian_url}}
+  <div class="feed__item feed__item--guardian">
+    <div class="article__logo">
+      <img class="article__logo--image" src="/images/guardian_logo.png" alt="The guardian Logo">
+    </div>
+    <div class="article__meta">
+      <p class="article__title">{{title}}</p>
+      <small class="article__date">{{publication_date}}</small>
+      <a href="{{newyorktimes_url}}" class="article__link" target="_blank">Continue reading</a>
+    </div>
   </div>
-</main>
+  {{/if}}
+  {{/guardian}} --}}
+\{{#if googlenews}}
+  \{{#each googlenews}}
+    \{{#if url}}
+      <div class="feed__item feed__item--googlenews">
+        <div class="article__logo">
+          <img class="article__logo--image" src="\{{logo}}" alt="\{{source}}">
+        </div>
+        <img class="article__image" src="\{{urlToImage}}" alt="\{{source}}">
+        <div class="article__meta">
+          <p class="article__title">\{{title}}</p>
+          <small class="article__author">\{{author}}</small>
+          <small class="article__date">\{{publishedAt}}</small>
+          <p class="article__description">\{{content}}</p>
+          <a href="\{{url}}" class="article__link" target="_blank">Continue reading</a>
+        </div>
+      </div>
+    \{{/if}}
+  \{{/each}}
+\{{/if}}
+</script>
 
 {{#section 'script'}}
 <div id="fb-root"></div>
-<script async src="https://www.instagram.com/static/bundles/es6/EmbedSDK.js/47c7ec92d91e.js"></script>
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-<script async defer crossorigin="anonymous"
-  src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.3&appId=561819877300981&autoLogAppEvents=1"></script>
-<script defer>
-  const feed = document.querySelector('.feed')
-
-  for (var i = feed.children.length; i >= 0; i--) {
-    feed.appendChild(feed.children[Math.random() * i | 0])
-  }
-</script>
+<script src="/js/handlebars.min.js"></script>
+{{!-- <script async defer crossorigin="anonymous"
+  src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.3&appId=561819877300981&autoLogAppEvents=1"></script> --}}
+<script async src="/js/randomizeFeed.js"></script>
+<script async src="/js/artistData.js"></script>
 {{/section}}

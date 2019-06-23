@@ -14,7 +14,7 @@ export const twitter = async (socials) => {
     const shortcode = data[0].id_str
     const date = data[0].created_at
     const object = {
-      twitter_url: meta.instagram,
+      twitter_url: meta.twitter,
       username: meta.username,
       shortcode: shortcode,
       creation_date: date
