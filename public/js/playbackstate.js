@@ -18,6 +18,7 @@
   //     timer = setTimeout(function () { advance(duration, element) }, 100);
   //   }
   // }
+
   socket.on("getPlayBackState", data => {
 
     if (remote.classList.contains('invisible')) {
