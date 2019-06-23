@@ -19,6 +19,11 @@
   //   }
   // }
   socket.on("getPlayBackState", data => {
+
+    if (remote.classList.contains('invisible')) {
+      remote.classList.remove('invisible')
+    }
+
     if (data.is_playing === false && remote.innerText === '❙❙') {
       remote.innerText = '⏵'
     } else if (data.is_playing === true && remote.innerText === '⏵' || remote.innerText === '') {
@@ -35,10 +40,9 @@
           <span class="spotify__id">${data.item.id}</span>
         </div>`
 
-      progress.classList.add('visible')
-
       while (spotify.firstChild) spotify.removeChild(spotify.firstChild)
       spotify.insertAdjacentHTML('afterbegin', html)
+      progress.classList.add('visible')
       id = document.querySelector('.spotify__id').innerText
     }
   })

@@ -970,6 +970,10 @@ small {
   opacity: 1 !important;
 }
 
+.invisible {
+  display: none;
+}
+
 .inactive-message {
   position: fixed;
   bottom: 50px;
