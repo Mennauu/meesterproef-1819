@@ -8,15 +8,18 @@ const twitterApi = new Twitter({
 
 export const twitter = async (socials) => {
   const meta = socials.find(object => object['twitter'])
-  const data = await twitterApi.get('/statuses/user_timeline.json', { screen_name: meta.username, count: 1 })
-  const shortcode = data[0].id_str
-  const date = data[0].created_at
-  const object = {
-    twitter_url: meta.instagram,
-    username: meta.username,
-    shortcode: shortcode,
-    creation_date: date
-  }
 
-  return object
+  if (meta !== undefined) {
+    const data = await twitterApi.get('/statuses/user_timeline.json', { screen_name: meta.username, count: 1 })
+    const shortcode = data[0].id_str
+    const date = data[0].created_at
+    const object = {
+      twitter_url: meta.instagram,
+      username: meta.username,
+      shortcode: shortcode,
+      creation_date: date
+    }
+    return object
+  }
+  return
 }

@@ -30,47 +30,56 @@ export const wikipedia = async (name) => {
 
 export const instagram = async (socials) => {
   const meta = socials.find(object => object['instagram'])
-  const data = await (await fetch(`${meta.instagram}?__a=1`)).json()
-  const shortcode = data.graphql.user.edge_owner_to_timeline_media.edges[0].node.shortcode
-  const object = {
-    instagram_url: meta.instagram,
-    username: meta.username,
-    shortcode: shortcode
-  }
 
-  return object
+  if (meta !== undefined) {
+    const data = await (await fetch(`${meta.instagram}?__a=1`)).json()
+    const shortcode = data.graphql.user.edge_owner_to_timeline_media.edges[0].node.shortcode
+    const object = {
+      instagram_url: meta.instagram,
+      username: meta.username,
+      shortcode: shortcode
+    }
+    return object
+  }
+  return
 }
 
 export const twitter = async (socials) => {
   const meta = socials.find(object => object['twitter'])
-  const data = await twitterApi.get('/statuses/user_timeline.json', { screen_name: meta.username, count: 1 })
-  const shortcode = data[0].id_str
-  const date = data[0].created_at
-  const object = {
-    twitter_url: meta.instagram,
-    username: meta.username,
-    shortcode: shortcode,
-    creation_date: date
-  }
 
-  return object
+  if (meta !== undefined) {
+    const data = await twitterApi.get('/statuses/user_timeline.json', { screen_name: meta.username, count: 1 })
+    const shortcode = data[0].id_str
+    const date = data[0].created_at
+    const object = {
+      twitter_url: meta.instagram,
+      username: meta.username,
+      shortcode: shortcode,
+      creation_date: date
+    }
+    return object
+  }
+  return
 }
 
 export const youtube = async (socials) => {
   const meta = socials.find(object => object['youtube'])
-  const data = await (await fetch(`https://www.googleapis.com/youtube/v3/channels?part=contentDetails&forUsername=${meta.username}&key=${process.env.YOUTUBE_API_KEY}`)).json()
-  const playlistID = data.items[0].contentDetails.relatedPlaylists.uploads
-  const userVideos = await (await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails,status&playlistId=${playlistID}&key=${process.env.YOUTUBE_API_KEY}`)).json()
-  const shortcode = userVideos.items[0].contentDetails.videoId
-  const date = userVideos.items[0].contentDetails.videoPublishedAt
-  const object = {
-    youtube_url: meta.youtube,
-    username: meta.username,
-    shortcode,
-    creation_date: date
-  }
 
-  return object
+  if (meta !== undefined) {
+    const data = await (await fetch(`https://www.googleapis.com/youtube/v3/channels?part=contentDetails&forUsername=${meta.username}&key=${process.env.YOUTUBE_API_KEY}`)).json()
+    const playlistID = data.items[0].contentDetails.relatedPlaylists.uploads
+    const userVideos = await (await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails,status&playlistId=${playlistID}&key=${process.env.YOUTUBE_API_KEY}`)).json()
+    const shortcode = userVideos.items[0].contentDetails.videoId
+    const date = userVideos.items[0].contentDetails.videoPublishedAt
+    const object = {
+      youtube_url: meta.youtube,
+      username: meta.username,
+      shortcode,
+      creation_date: date
+    }
+    return object
+  }
+  return
 }
 
 export const thenewyorktimes = async (name) => {

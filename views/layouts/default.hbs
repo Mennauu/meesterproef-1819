@@ -6,7 +6,7 @@
     <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport">
     <title>Linernote</title>
     <meta name="description"
-      content="Linernote wil Spotify, Youtube en Social Media content van artiesten samenbrengen in één app, aangevuld door concertkaartjes">
+      content="Linernote brings Spotify, Youtube, articles and Social Media content from artists together in one app, supplemented by concert tickets.">
     <link rel="icon" type="image/png" href="/images/favicon.png">
     <link rel="stylesheet" href="/css/swiper.min.css">
     <link rel="stylesheet" href="/css/styles.css">
@@ -18,18 +18,19 @@
     {{#playback}}
     <div class="spotify">
       {{#if item.name}}
-      <img class="spotify__image" src="{{item.album.images.2.url}}" alt="{{item.name}}">
-      <div class="spotify__song">
-        <span class="spotify__track">{{item.name}}</span>
-        <span class="spotify__artist">{{item.artists.0.name}}</span>
-        <span class="spotify__id">{{item.id}}</span>
+      <div class="spotify__refresh">
+        <div class="spotify__progress"></div>
+        <img class="spotify__image" src="{{item.album.images.2.url}}" alt="{{item.name}}">
+        <div class="spotify__song">
+          <span class="spotify__track">{{item.name}}</span>
+          <span class="spotify__artist">{{item.artists.0.name}}</span>
+          <span class="spotify__id">{{item.id}}</span>
+        </div>
       </div>
-      <div class="spotify__remote">
-        &#9654;
-      </div>
+      <span class="spotify__remote">{{#if is_playing}}❙❙{{else}}⏵{{/if}}</span>
       {{else}}
       <div class="spotify__song">
-        <span class="spotify__artist">Nothing is playing</span>
+        <span class="spotify__artist">Spotify isn't playing</span>
       </div>
       {{/if}}
     </div>
@@ -42,13 +43,25 @@
         <a href="/search" class="navigation__tab">
           <img src="/images/search.png" alt="Search">
         </a>
-        <a href="#" class="navigation__tab">
+        <a href="#" class="navigation__tab navigation__tab--inactive">
           <img src="/images/library.png" alt="Library">
         </a>
       </nav>
     </footer>
+    <div class="inactive-message">Not in prototype</div>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/playbackstate.js"></script>
     {{{_sections.script}}}
+    <script defer>
+      const inactive = document.querySelector('.navigation__tab--inactive')
+      const message = document.querySelector('.inactive-message')
+      inactive.addEventListener('click', () => {
+        message.classList.add('visible')
+        setTimeout(() => {
+          message.classList.remove('visible')
+        }, 3000)
+      })
+    </script>
   </body>
 
 </html>

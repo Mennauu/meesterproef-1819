@@ -20,7 +20,7 @@ exports.login = (req, res) => {
 }
 
 exports.spotifyLogin = (req, res) => {
-  const scopes = ['user-read-private', 'user-read-email', 'user-read-currently-playing', 'user-read-playback-state']
+  const scopes = ['user-read-private', 'user-read-email', 'user-read-currently-playing', 'user-read-playback-state', 'user-modify-playback-state']
   const authorizeURL = spotifyAuth.createAuthorizeURL(scopes)
 
   res.redirect(authorizeURL)
@@ -171,43 +171,40 @@ exports.search = async (req, res) => {
 
 exports.artist = async (req, res) => {
   try {
-    const spotifyApi = new SpotifyWebApi({ accessToken: req.cookies.spotify_access_token })
-    const spotifyPlayState = await spotifyApi.getMyCurrentPlaybackState({})
-    const userID = req.cookies.spotify_user_id
-    const artist = await spotifyApi.getArtist(req.params.id)
-    const name = artist.body.name.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
-    const related = await spotifyApi.getArtistRelatedArtists(req.params.id)
-    const user = await userModel.findOne({ user: userID })
-    const topTracks = await spotifyApi.getArtistTopTracks(req.params.id, 'NL')
     let followingList = []
     let notFollowingList = []
     let topTracksList = []
     let trackNumber = 0
     let socials = []
+    const spotifyApi = new SpotifyWebApi({ accessToken: req.cookies.spotify_access_token })
+    const spotifyPlayState = await spotifyApi.getMyCurrentPlaybackState({})
+    const artist = await spotifyApi.getArtist(req.params.id)
+    const name = artist.body.name.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+    const related = await spotifyApi.getArtistRelatedArtists(req.params.id)
+    const topTracks = await spotifyApi.getArtistTopTracks(req.params.id, 'NL')
+    const userID = req.cookies.spotify_user_id
+    const user = await userModel.findOne({ user: userID })
+    const following = user.following
+    const checkFollowing = following.includes(artist.body.id)
+    const relatedArtists = related.body.artists
+    const relatedFollowing = relatedArtists.filter(element => following.includes(element.id))
+    const relatedNotFollowing = relatedArtists.filter(element => !following.includes(element.id))
 
-    if (user.user === userID) {
-      const result = await userModel.find({})
-      const following = result[0].following
-      const relatedArtists = related.body.artists
-      const relatedFollowing = relatedArtists.filter(element => following.includes(element.id))
-      const relatedNotFollowing = relatedArtists.filter(element => !following.includes(element.id))
+    for (let artist of relatedFollowing) {
+      artist.following = true
+      followingList.push({
+        id: artist.id,
+        name: artist.name,
+        image: artist.images[2].url
+      })
+    }
 
-      for (let artist of relatedFollowing) {
-        artist.following = true
-        followingList.push({
-          id: artist.id,
-          name: artist.name,
-          image: artist.images[2].url
-        })
-      }
-
-      for (let artist of relatedNotFollowing) {
-        notFollowingList.push({
-          id: artist.id,
-          name: artist.name,
-          image: artist.images[2].url
-        })
-      }
+    for (let artist of relatedNotFollowing) {
+      notFollowingList.push({
+        id: artist.id,
+        name: artist.name,
+        image: artist.images[2].url
+      })
     }
 
     for (let track of topTracks.body.tracks) {
@@ -247,6 +244,7 @@ exports.artist = async (req, res) => {
       playback: spotifyPlayState.body,
       artist: artist.body,
       songs: topTracksList.slice(0, 5),
+      checkFollowing,
       related: notFollowingList,
       relatedFollowing: followingList,
       spotifyURL: topTracks.body.tracks[0].external_urls.spotify,

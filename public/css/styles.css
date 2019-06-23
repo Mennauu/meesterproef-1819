@@ -178,6 +178,10 @@ small {
   line-height: 60px;
 }
 
+.navigation__tab:hover {
+  background-color: #171717;
+}
+
 /********************************
   5. Buttons
 *********************************/
@@ -817,6 +821,15 @@ small {
   padding: 0 1em;
 }
 
+.spotify__progress {
+  width: 1px;
+  height: 3px;
+  background: #fff;
+  -webkit-transition: width .1s linear;
+  transition: width .1s linear;
+  visibility: hidden;
+}
+
 .spotify__image {
   width: 30px;
   height: 30px;
@@ -872,10 +885,25 @@ small {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.spotify__remote:hover {
+  border: 1px solid #bebebe;
+  color: #bebebe;
 }
 
 .spotify__id {
   display: none;
+}
+
+.spotify__refresh {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
 }
 
 /********************************
@@ -935,5 +963,37 @@ small {
 
 .dark-slide {
   background: rgba(23, 23, 23, 0.87);
+}
+
+.visible {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.inactive-message {
+  position: fixed;
+  bottom: 50px;
+  background: rgba(0, 0, 0, 0.8);
+  right: 10px;
+  visibility: hidden;
+  z-index: 20;
+  color: #fff;
+  max-width: 100px;
+  padding: 0.6em;
+  text-align: center;
+  border-radius: 10px;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  opacity: 0;
+}
+
+.inactive-message:after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 40px;
+  border-top: 10px solid rgba(0, 0, 0, 0.8);
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
 }
 /*# sourceMappingURL=styles.css.map */

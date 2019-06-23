@@ -11,7 +11,11 @@
         {{#artist}}
         <h1 class="carousel__name">{{name}}</h1>
         {{/artist}}
+        {{#unless checkFollowing}}
         <button class="carousel__button">Follow</button>
+        {{else}}
+        <button class="carousel__button carousel__button--clicked">Following</button>
+        {{/unless}}
       </div>
     </div>
     <div class="swiper-slide dark-slide">
@@ -68,6 +72,7 @@
   </div> --}}
   <div class="feed">
     {{#instagram}}
+    {{#if shortcode}}
     <div class="feed__item feed__item--instagram">
       <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/{{shortcode}}/"
         data-instgrm-version="12">
@@ -156,6 +161,7 @@
         </div>
       </blockquote>
     </div>
+    {{/if}}
     {{/instagram}}
     {{#twitter}}
     <div class="feed__item feed__item--twitter">
@@ -244,19 +250,6 @@
     {{/googlenews}}
   </div>
 </main>
-
-{{#playback}}
-<div class="spotify">
-  <img class="spotify__image" src="{{item.album.images.2.url}}" alt="{{item.name}}">
-  <div class="spotify__song">
-    <span class="spotify__artist">{{item.artists.0.name}}</span>
-    <span class="spotify__track">{{item.name}}</span>
-  </div>
-  <div class="spotify__remote">
-    &#9654;
-  </div>
-</div>
-{{/playback}}
 
 {{#section 'script'}}
 <div id="fb-root"></div>

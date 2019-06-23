@@ -26,6 +26,7 @@
   </div> --}}
   <div class="feed">
     {{#instagram}}
+    {{#if shortcode}}
     <div class="feed__item feed__item--instagram">
       <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/{{shortcode}}/"
         data-instgrm-version="12">
@@ -114,16 +115,20 @@
         </div>
       </blockquote>
     </div>
+    {{/if}}
     {{/instagram}}
     {{#twitter}}
+    {{#if shortcode}}
     <div class="feed__item feed__item--twitter">
       <blockquote class="twitter-tweet" data-lang="nl">
         <p lang="en" dir="ltr"><a href="https://twitter.com/hashtag/TWEET?src=hash">#TWEET</a> is loading.</p>&mdash;
         @{{username}} <a href="https://twitter.com/{{username}}/status/{{shortcode}}">{{creation_date}}</a>
       </blockquote>
     </div>
+    {{/if}}
     {{/twitter}}
     {{#youtube}}
+    {{#if shortcode}}
     <div class="feed__item feed__item--youtube">
       <div class="article__logo">
         <img class="article__logo--image" src="/images/youtube-logo.png" alt="Youtube Logo">
@@ -133,8 +138,10 @@
           allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
     </div>
+    {{/if}}
     {{/youtube}}
     {{#thenewyorktimes}}
+    {{#if thenewyorktimes_url}}
     <div class="feed__item feed__item--newyorktimes">
       <div class="article__logo">
         <img class="article__logo--image" src="/images/tnyt-logo.png" alt="{{source}}">
@@ -148,8 +155,10 @@
         <a href="{{thenewyorktimes_url}}" class="article__link" target="_blank">Continue reading</a>
       </div>
     </div>
+    {{/if}}
     {{/thenewyorktimes}}
     {{#googlenews}}
+    {{#if url}}
     <div class="feed__item feed__item--googlenews">
       <div class="article__logo">
         <img class="article__logo--image" src="{{logo}}" alt="{{source}}">
@@ -163,6 +172,7 @@
         <a href="{{url}}" class="article__link" target="_blank">Continue reading</a>
       </div>
     </div>
+    {{/if}}
     {{/googlenews}}
     {{#ticketmaster}}
     {{#if ticketmaster_url}}
@@ -198,31 +208,7 @@
 <script async defer crossorigin="anonymous"
   src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.3&appId=561819877300981&autoLogAppEvents=1"></script>
 <script defer>
-  const spotify = document.querySelector('.spotify')
   const feed = document.querySelector('.feed')
-  let id = document.querySelector('.spotify__id').innerText
-  const socket = io()
-
-  socket.on("getPlayBackState", data => {
-    console.log(data)
-    if (data.item.id !== id) {
-      const html = `
-        <img class="spotify__image" src="${data.item.album.images[2].url}" alt="${data.item.name}">
-        <div class="spotify__song">
-          <span class="spotify__track">${data.item.name}</span>
-          <span class="spotify__artist">${data.item.artists[0].name}</span>
-          <span class="spotify__id">${data.item.id}</span>
-        </div>
-        <div class="spotify__remote">
-          &#9654;
-        </div>`
-
-
-      while (spotify.firstChild) spotify.removeChild(spotify.firstChild)
-      spotify.insertAdjacentHTML('afterbegin', html)
-      id = document.querySelector('.spotify__id').innerText
-    }
-  })
 
   for (var i = feed.children.length; i >= 0; i--) {
     feed.appendChild(feed.children[Math.random() * i | 0])

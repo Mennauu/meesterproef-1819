@@ -8,6 +8,7 @@ $gray-light: #f0f0f0;
 $gray: #bebebe;
 $gray-dark: #3F3F3F;
 $black: #171717;
+$black-dark: #000;
 $black-light: #282828;
 $green: #1db954;
 $green-dark: #179443;
@@ -192,6 +193,10 @@ small {
     flex: 1;
     height: 100%;
     line-height: 60px;
+
+    &:hover {
+      background-color: $black;
+    }
   }
 }
 
@@ -769,6 +774,14 @@ small {
   align-items: center;
   padding: 0 1em;
 
+  &__progress {
+    width: 1px;
+    height: 3px;
+    background: $white;
+    transition: width .1s linear;
+    visibility: hidden;
+  }
+
   &__image {
     width: 30px;
     height: 30px;
@@ -811,10 +824,22 @@ small {
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: 0.2s;
+    cursor: pointer;
+
+    &:hover {
+      border: 1px solid $gray;
+      color: $gray;
+    }
   }
 
   &__id {
     display: none;
+  }
+
+  &__refresh {
+    display: flex;
+    width: 100%;
   }
 }
 
@@ -867,4 +892,35 @@ small {
 
 .dark-slide {
   background: rgba(23,23,23, 0.87);
+}
+
+.visible {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.inactive-message {
+  position: fixed;
+  bottom: 50px;
+  background: rgba($black-dark, 0.8);
+  right: 10px;
+  visibility: hidden;
+  z-index: 20;
+  color: $white;
+  max-width: 100px;
+  padding: 0.6em;
+  text-align: center;
+  border-radius: $border-radius;
+  transition: 0.4s;
+  opacity: 0;
+}
+
+.inactive-message:after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 40px;
+  border-top: 10px solid rgba($black-dark, 0.8);
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent; 
 }
