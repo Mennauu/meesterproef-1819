@@ -2,10 +2,10 @@
   "name": "linernote",
   "version": "1.0.0",
   "author": "Menno de Vries",
-  "description": "Linernote wil Spotify, Youtube en Social Media content van artiesten samenbrengen in één app, aangevuld door concertkaartjes.",
+  "description": "Linernote brings Spotify, Youtube, articles and Social Media content from artists together in one app, supplemented by concert tickets.",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon -r esm app.js"
+    "start": "node -r esm app.js"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
