@@ -1,5 +1,4 @@
 import * as api from '../apis/all.js'
-
 const SpotifyWebApi = require('spotify-web-api-node')
 
 export const getMultipleArtistData = async (data, token) => {
@@ -19,16 +18,18 @@ export const getMultipleArtistData = async (data, token) => {
 
 
     const musicbrainz = await api.muzicbrainz(name)
-    for (let link of musicbrainz.relations) {
-      const url = new URL(link.url.resource)
-      const domain = url.hostname.split(".").slice(-2).join(".")
-      const platform = domain.split('.')[0]
-      const username = url.pathname.substr(1).split('.')[0].replace(/\/$/, '').replace(/^.*\/(.*)$/, "$1")
+    if (musicbrainz.relations.length > 0) {
+      for (let link of musicbrainz.relations) {
+        const url = new URL(link.url.resource)
+        const domain = url.hostname.split(".").slice(-2).join(".")
+        const platform = domain.split('.')[0]
+        const username = url.pathname.substr(1).split('.')[0].replace(/\/$/, '').replace(/^.*\/(.*)$/, "$1")
 
-      socials.push({
-        [platform]: link.url.resource,
-        username
-      })
+        socials.push({
+          [platform]: link.url.resource,
+          username
+        })
+      }
     }
 
     setTimeout(async () => {

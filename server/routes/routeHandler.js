@@ -150,11 +150,13 @@ exports.artist = async (req, res) => {
     }
 
     for (let artist of relatedNotFollowing) {
-      notFollowingList.push({
-        id: artist.id,
-        name: artist.name,
-        image: artist.images[2].url
-      })
+      if (artist.images.length > 2) {
+        notFollowingList.push({
+          id: artist.id,
+          name: artist.name,
+          image: artist.images[2].url
+        })
+      }
     }
 
     for (let track of topTracks.body.tracks) {
