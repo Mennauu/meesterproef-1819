@@ -50,6 +50,7 @@ export const getMultipleArtistData = async (data, token) => {
 
     const thenewyorktimesData = await api.thenewyorktimes(name)
     thenewyorktimes.push(thenewyorktimesData)
+    console.log(thenewyorktimes)
 
     const googlenewsData = await api.googlenews(name)
     if (googlenewsData[0] !== undefined) {

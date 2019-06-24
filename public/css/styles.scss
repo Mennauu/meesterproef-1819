@@ -544,7 +544,7 @@ small {
     padding: 1em;
   
     .header__title {
-      margin-top: 2em;
+      margin-top: 1em;
       margin-bottom: 0.75em;
     }
   
@@ -799,6 +799,7 @@ small {
     display: flex;
     justify-content: center;
     flex-direction: column;
+    overflow: hidden;
   }
 
   &__artist {
@@ -811,9 +812,11 @@ small {
   }
 
   &__track {
-    display: inline-block;
     color: $gray;
     text-transform: lowercase;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 
     &::first-letter {
       text-transform: uppercase;
@@ -844,7 +847,7 @@ small {
 
   &__refresh {
     display: flex;
-    width: 100%;
+    width: calc(100% - 3em);
   }
 }
 
@@ -986,4 +989,9 @@ $duration: 1.4s;
   &__spinner {
     animation: rotator $duration linear infinite;
   }
+}
+
+.no-song {
+  padding-left: 2em;
+  margin-left: 2em;
 }

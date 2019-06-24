@@ -577,7 +577,7 @@ small {
 }
 
 .template__search .header__title {
-  margin-top: 2em;
+  margin-top: 1em;
   margin-bottom: 0.75em;
 }
 
@@ -855,6 +855,7 @@ small {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
+  overflow: hidden;
 }
 
 .spotify__artist {
@@ -867,9 +868,11 @@ small {
 }
 
 .spotify__track {
-  display: inline-block;
   color: #bebebe;
   text-transform: lowercase;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .spotify__track::first-letter {
@@ -909,7 +912,7 @@ small {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  width: 100%;
+  width: calc(100% - 3em);
 }
 
 /********************************
@@ -1131,5 +1134,10 @@ small {
 .loader__spinner {
   -webkit-animation: rotator 1.4s linear infinite;
           animation: rotator 1.4s linear infinite;
+}
+
+.no-song {
+  padding-left: 2em;
+  margin-left: 2em;
 }
 /*# sourceMappingURL=styles.css.map */

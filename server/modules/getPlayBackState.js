@@ -14,5 +14,5 @@ export const getPlayBackState = (socket) => {
     } catch (error) {
       console.error(error)
     }
-  }, 2000)
+  }, 5000)
 }
