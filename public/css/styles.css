@@ -899,6 +899,7 @@ small {
           justify-content: center;
   -webkit-transition: 0.2s;
   transition: 0.2s;
+  font-size: 1.25rem;
   cursor: pointer;
   /* Support for all WebKit browsers. */
   -webkit-font-smoothing: antialiased;
@@ -917,6 +918,9 @@ small {
   display: -ms-flexbox;
   display: flex;
   width: calc(100% - 3em);
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 /********************************

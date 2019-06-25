@@ -836,6 +836,7 @@ small {
     align-items: center;
     justify-content: center;
     transition: 0.2s;
+    font-size: 1.25rem;
     cursor: pointer;
      /* Support for all WebKit browsers. */
     -webkit-font-smoothing: antialiased;
@@ -852,6 +853,7 @@ small {
   &__refresh {
     display: flex;
     width: calc(100% - 3em);
+    align-items: center;
   }
 }
 

@@ -27,7 +27,7 @@
           <span class="spotify__id">{{item.id}}</span>
         </div>
       </div>
-      <span class="spotify__remote">{{#if is_playing}}❙❙{{else}}⏵{{/if}}</span>
+      <span class="spotify__remote">{{#if is_playing}}||{{else}}▸{{/if}}</span>
       {{else}}
       <div class="spotify__refresh">
         <div class="spotify__progress"></div>
@@ -36,7 +36,7 @@
           <span class="spotify__id">0</span>
         </div>
       </div>
-      <span class="spotify__remote invisible">{{#if is_playing}}❙❙{{else}}⏵{{/if}}</span>
+      <span class="spotify__remote invisible">{{#if is_playing}}||{{else}}▸{{/if}}</span>
       {{/if}}
     </div>
     {{/playback}}

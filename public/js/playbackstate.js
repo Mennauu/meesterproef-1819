@@ -25,10 +25,10 @@
       remote.classList.remove('invisible')
     }
 
-    if (data.is_playing === false && remote.innerText === '❙❙') {
-      remote.innerText = '⏵'
-    } else if (data.is_playing === true && remote.innerText === '⏵' || remote.innerText === '') {
-      remote.innerText = '❙❙'
+    if (data.is_playing === false && remote.innerText === '||') {
+      remote.innerText = '▸'
+    } else if (data.is_playing === true && remote.innerText === '▸' || remote.innerText === '') {
+      remote.innerText = '||'
     }
 
     if (data.item.id !== id) {
@@ -53,7 +53,7 @@
       const cookie = document.cookie
       const token = cookie.replace(/(?:(?:^|.*;\s*)spotify_access_token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
 
-      if (remote.innerText === '❙❙') {
+      if (remote.innerText === '||') {
         const config = {
           method: 'PUT',
           headers: {
@@ -62,7 +62,7 @@
           }
         }
         const response = await fetch('https://api.spotify.com/v1/me/player/pause', config)
-        remote.innerText = '⏵'
+        remote.innerText = '▸'
       } else {
         const config = {
           method: 'PUT',
@@ -72,7 +72,7 @@
           }
         }
         const response = await fetch('https://api.spotify.com/v1/me/player/play', config)
-        remote.innerText = '❙❙'
+        remote.innerText = '||'
       }
     } catch (error) {
       console.log(error)
