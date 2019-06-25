@@ -1,5 +1,5 @@
 import { getPlayBackState } from './server/modules/getPlayBackState.js'
-import { getArtistData, getMultipleArtistData } from './server/modules/getArtistdata.js'
+import { getArtistData, getMultipleArtistData } from './server/modules/getArtistData.js'
 
 // const shrinkRay   = require('shrink-ray-current')
 const express = require('express')
