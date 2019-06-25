@@ -899,7 +899,6 @@ small {
           justify-content: center;
   -webkit-transition: 0.2s;
   transition: 0.2s;
-  font-size: 1.25rem;
   cursor: pointer;
   /* Support for all WebKit browsers. */
   -webkit-font-smoothing: antialiased;
