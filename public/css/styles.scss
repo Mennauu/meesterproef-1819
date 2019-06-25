@@ -188,6 +188,10 @@ small {
     display: flex;
   }
 
+  img {
+    max-width: 25px;
+  }
+
   &__tab {
     flex: 1;
     height: 100%;
@@ -833,11 +837,12 @@ small {
     justify-content: center;
     transition: 0.2s;
     cursor: pointer;
-
-    &:hover {
-      border: 1px solid $gray;
-      color: $gray;
-    }
+     /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
   }
 
   &__id {

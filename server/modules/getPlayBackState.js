@@ -7,9 +7,6 @@ export const getPlayBackState = (socket) => {
       const token = cookie.replace(/(?:(?:^|.*;\s*)spotify_access_token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
       const spotifyApi = new SpotifyWebApi({ accessToken: token })
       const result = await spotifyApi.getMyCurrentPlaybackState({})
-
-      console.log(result)
-
       if (Object.keys(result.body).length > 0) {
         socket.emit("getPlayBackState", result.body)
       }
