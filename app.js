@@ -1,7 +1,7 @@
 import { getPlayBackState } from './server/modules/getPlayBackState.js'
 import { getArtistData, getMultipleArtistData } from './server/modules/getArtistData.js'
 
-// const shrinkRay   = require('shrink-ray-current')
+const shrinkRay = require('shrink-ray-current')
 const express = require('express')
 const hbs = require('express-handlebars')
 const bodyParser = require('body-parser')
@@ -20,7 +20,7 @@ app.disable('x-powered-by')
 app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-// app.use(shrinkRay())
+app.use(shrinkRay())
 app.use(express.static(__dirname + '/public', {
   maxAge: "365d",
   lastModified: "",
