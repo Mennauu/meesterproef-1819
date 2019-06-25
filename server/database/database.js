@@ -1,7 +1,9 @@
 const mongoose = require('mongoose')
+require('dotenv').config()
+
 const server = 'localhost'
 const database = 'test'
-const uristring = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || `mongodb://${server}/${database}`
+const uristring = process.env.MONGODB_URI || `mongodb://${server}/${database}`
 
 class Database {
   constructor() {
