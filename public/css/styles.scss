@@ -907,7 +907,7 @@ small {
 }
 
 .invisible {
-  display: none;
+  display: none !important;
 }
 
 .inactive-message {

@@ -239,4 +239,10 @@
 {{!-- <script async defer crossorigin="anonymous"
   src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.3&appId=561819877300981&autoLogAppEvents=1"></script> --}}
 <script async src="/js/artistData.js"></script>
+<script async>
+  if (document.querySelector('.following__none') !== null) {
+    const loader = document.querySelector('.loader')
+    loader.classList.add('invisible')
+  }
+</script>
 {{/section}}

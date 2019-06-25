@@ -14,10 +14,10 @@ class Database {
     mongoose.connect(uristring, { useNewUrlParser: true })
       .then(() => {
         // mongoose.connection.db.dropDatabase();
-        console.log('Database connection successful' + uristring)
+        console.log('Database connection successful: ' + uristring)
       })
       .catch(err => {
-        console.error('Database connection error:' + uristring)
+        console.error('Database connection error: ' + uristring)
       })
   }
 }

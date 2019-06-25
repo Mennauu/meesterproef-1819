@@ -8,11 +8,13 @@ export const getPlayBackState = (socket) => {
       const spotifyApi = new SpotifyWebApi({ accessToken: token })
       const result = await spotifyApi.getMyCurrentPlaybackState({})
 
+      console.log(result)
+
       if (Object.keys(result.body).length > 0) {
         socket.emit("getPlayBackState", result.body)
       }
     } catch (error) {
-      console.error(error)
+      console.error("playbackstate error: " + error)
     }
-  }, 5000)
+  }, 2000)
 }

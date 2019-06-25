@@ -33,30 +33,35 @@ export const getMultipleArtistData = async (data, token) => {
     }
 
     setTimeout(async () => {
-      const instagramData = await api.instagram(socials)
-      instagram.push(instagramData)
+      try {
+        const instagramData = await api.instagram(socials)
+        instagram.push(instagramData)
 
-      const twitterData = await api.twitter(socials)
-      twitter.push(twitterData)
+        const twitterData = await api.twitter(socials)
+        twitter.push(twitterData)
 
-      const youtubeData = await api.youtube(socials)
-      youtube.push(youtubeData)
+        const youtubeData = await api.youtube(socials)
+        youtube.push(youtubeData)
 
-      socials = []
-    }, 1000)
+        socials = []
+      } catch (error) {
+        console.error("Get socials error : " + error)
+      }
+    }, 0)
 
     const ticketmasterData = await api.ticketmaster(name, artist.images[1].url)
     ticketmaster.push(ticketmasterData)
 
     const thenewyorktimesData = await api.thenewyorktimes(name)
     thenewyorktimes.push(thenewyorktimesData)
-    console.log(thenewyorktimes)
 
     const googlenewsData = await api.googlenews(name)
     if (googlenewsData[0] !== undefined) {
       googlenews.push(googlenewsData[0])
     }
   }
+  console.log(instagram)
+  console.log(twitter)
 
   const socialLinks = {
     'instagram': instagram,
