@@ -837,11 +837,8 @@ small {
     justify-content: center;
     transition: 0.2s;
     cursor: pointer;
-     /* Support for all WebKit browsers. */
     -webkit-font-smoothing: antialiased;
-    /* Support for Safari and Chrome. */
     text-rendering: optimizeLegibility;
-    /* Support for Firefox. */
     -moz-osx-font-smoothing: grayscale;
   }
 
